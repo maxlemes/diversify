@@ -2,7 +2,7 @@
 import plotly.graph_objects as go
 import plotly.express as px
 
-def criar_grafico(tipo, dados, titulo, cores, hole=0.4):
+def criar_grafico(tipo, dados, titulo, cores=px.colors.qualitative.Set2, hole=0.4):
     """
     Função genérica para criar gráficos de rosca, barras ou treemap.
     

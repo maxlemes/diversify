@@ -2,7 +2,7 @@
 # Responde a eventos como cliques, seleções e atualizações.
 
 from dash import Input, Output
-from app import app
+from dashboard.app import app
 
 @app.callback(
     Output("output-div", "children"),

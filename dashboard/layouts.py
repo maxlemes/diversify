@@ -1,7 +1,11 @@
-import dash_html_components as html
-import dash_core_components as dcc
+# Contém o layout do aplicativo (estrutura das páginas).
+# Define os componentes visuais (gráficos, botões, texto etc.).
+# Utiliza dbc.Row() e dbc.Col() para organização.
+
+from dash import html
+from dash import dcc
 import dash_bootstrap_components as dbc
-from graficos import criar_grafico_rosca, criar_grafico_barras
+from src.graficos import criar_grafico, grafico_comparativo
 
 # Suponha que já temos os dados calculados
 investimentos_total = 100000
@@ -25,13 +29,13 @@ layout = dbc.Container([
 
     # Gráficos
     dbc.Row([
-        dbc.Col(dcc.Graph(figure=criar_grafico_rosca(distribuicao_atual, "Distribuição Atual")), width=6),
-        dbc.Col(dcc.Graph(figure=criar_grafico_rosca(distribuicao_desejada, "Distribuição Desejada")), width=6),
+        dbc.Col(dcc.Graph(figure=criar_grafico('rosca', distribuicao_atual, "Distribuição Atual")), width=6),
+        dbc.Col(dcc.Graph(figure=criar_grafico('rosca', distribuicao_desejada, "Distribuição Desejada")), width=6),
     ], className="mb-4"),
 
     # Gráfico de barras comparando as distribuições
     dbc.Row([
-        dbc.Col(dcc.Graph(figure=criar_grafico_barras(distribuicao_atual, distribuicao_desejada)), width=12),
+        dbc.Col(dcc.Graph(figure=grafico_comparativo(distribuicao_atual, distribuicao_desejada)), width=12),
     ], className="mb-4"),
 ])
 
