@@ -4,9 +4,7 @@
 from dash import Input, Output
 from dashboard.app import app
 
-@app.callback(
-    Output("output-div", "children"),
-    Input("input-text", "value")
-)
+
+@app.callback(Output('output-div', 'children'), Input('input-text', 'value'))
 def atualizar_texto(valor):
-    return f"Você digitou: {valor}"
+    return f'Você digitou: {valor}'

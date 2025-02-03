@@ -5,72 +5,164 @@
 
 import re
 from selenium.webdriver.common.by import By
-from .webdriver import iniciar_navegador
-from .database import salvar_ativo
-from diversify.scrapping.urls import profile_yahoo
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
-def extrair_dados(ativo):
-    """Acessa a URL e retorna o título da página."""
+from .webdriver import iniciar_navegador
+from .database import salvar_profile
+from .urls import profile_yahoo, income_tradingview, stats_tradingview
+
+
+def extrair_profile(ativo):
+    """Acessa o site do Yahoo e retorna o perfil da empresa."""
     url = profile_yahoo(ativo)
     driver = iniciar_navegador()
     driver.get(url)
 
-    try: 
-        nome_acao = driver.find_element(By.XPATH, '/html/body/div[2]/main/section/section/section/article/section[1]/div[1]/div/div/section/h1').text 
-        descricao = driver.find_element(By.XPATH, '/html/body/div[2]/main/section/section/section/article/section[3]/section[1]/p').text
-        website = driver.find_element(By.XPATH, '/html/body/div[2]/main/section/section/section/article/section[2]/section[2]/div/div/a[2]').text
+    try:
+        nome_acao = driver.find_element(
+            By.XPATH,
+            '/html/body/div[2]/main/section/section/section/article/section[1]/div[1]/div/div/section/h1',
+        ).text
+        descricao = driver.find_element(
+            By.XPATH,
+            '/html/body/div[2]/main/section/section/section/article/section[3]/section[1]/p',
+        ).text
+        website = driver.find_element(
+            By.XPATH,
+            '/html/body/div[2]/main/section/section/section/article/section[2]/section[2]/div/div/a[2]',
+        ).text
+        cotacao = driver.find_element(
+            By.XPATH,
+            '/html/body/div[2]/main/section/section/section/article/section[1]/div[2]/div[1]/section/div/section/div[1]/div[1]/span',
+        ).text
+
+        if cotacao != '-':
+            cotacao = float(
+                re.sub('[\u202a\u202c,]', '', cotacao).replace(',', '.')
+            )
 
         dados = {
-            "ticker": ativo,
-            "nome": limpar_nome_empresa(nome_acao),
-            "descricao": descricao,
-            "website": website
+            'ticker': ativo,
+            'nome': limpar_nome_empresa(nome_acao),
+            'descricao': descricao,
+            'website': website,
+            'cotacao': cotacao
         }
 
-        salvar_ativo(dados)
-        print(f"Dados de {ativo} salvos com sucesso!")
+        salvar_profile(dados)
+        print(f'Perfil de {ativo} salvos com sucesso!')
 
     except Exception as e:
-        print(f"Erro ao extrair dados: {e}")
+        print(f'Erro ao extrair dados: {e}')
         dados = None
 
     driver.quit()
     return dados
 
+
 def limpar_nome_empresa(nome):
     """Remove 'S.A.', 'S/A' e outras informações extras do nome da empresa."""
-    nome = re.sub(r"\bS\.?A\b", "", nome, flags=re.IGNORECASE).strip()  # Remove 'S.A.' ou 'SA'
-    nome = re.split(r"[\(\.]", nome)[0].strip()  # Corta no primeiro '(' ou '.'
+    nome = re.sub(
+        r'\bS\.?A\b', '', nome, flags=re.IGNORECASE
+    ).strip()  # Remove 'S.A.' ou 'SA'
+    nome = re.split(r'[\(\.]', nome)[0].strip()  # Corta no primeiro '(' ou '.'
     return nome
 
-def pegar_links(url):
-    """Acessa a URL e retorna todos os links da página."""
+
+def extrair_indicador(ativo, indicador):
+
+    url_income = income_tradingview(ativo)
+    url_stats = stats_tradingview(ativo)
+    ind_income = ['EPS']
+    ind_stats = ['ROE', 'ROIC']
+
     driver = iniciar_navegador()
-    driver.get(url)
 
-    # Espera até que o conteúdo da página seja carregado (espera por qualquer elemento na página)
-    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "a")))
+    if indicador in ind_income:
+        driver.get(url_income)
+    else:
+        driver.get(url_stats)
 
-    # Pega todos os links presentes na página
-    links = driver.find_elements(By.TAG_NAME, "a")
-    urls = [link.get_attribute("href") for link in links if link.get_attribute("href") is not None]
+    # Espera explícita para garantir que o elemento esteja presente
+    wait = WebDriverWait(driver, 10)  # Espera até 15 segundos
+
+    anos_eps = [
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[16]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[17]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[18]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[19]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[20]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[21]/div/div[1]',
+    ]
+    valores_eps = [
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[16]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[17]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[18]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[19]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[20]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[21]/div/div[1]',
+    ]
+
+    anos_roe = [
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[16]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[17]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[18]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[19]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[20]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[21]/div/div[1]',
+    ]
+    valores_roe = [
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[16]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[17]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[18]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[19]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[20]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[21]/div/div',
+    ]
+
+    if indicador == 'EPS':
+        anos_ind = anos_eps
+        valores_ind = valores_eps
+    else:
+        if indicador == 'ROE':
+            anos_ind = anos_roe
+            valores_ind = valores_roe
+
+    dados = []
+
+    try:
+        elemento = wait.until(
+            EC.presence_of_element_located((By.XPATH, valores_ind[0]))
+        )
+        try:
+            for index in range(len(anos_ind)):
+                ano = driver.find_element(By.XPATH, anos_ind[index]).text
+                valor = driver.find_element(By.XPATH, valores_ind[index]).text
+
+                if valor.startswith('\u202a'):
+                    valor = float(
+                        re.sub('[\u202a\u202c,]', '', valor).replace(',', '.')
+                        )/100
+
+                dado = {
+                    'ticker': ativo,
+                    'ano': ano,
+                    'indicador': indicador,
+                    'valor': valor
+                }
+                dados.append(dado)
+
+            # salvar_ativo(dados)
+            print(f'{indicador} de {ativo} coletados com sucesso!')
+
+        except Exception as e:
+            print(f'Erro ao extrair dados: {e}')
+            dados = None
+
+    except TimeoutException:
+        print('O elemento não foi encontrado dentro do tempo limite.')
 
     driver.quit()
-    return urls
-
-def salvar_dados_ativo(nome, descricao, url):
-    """Salva os dados do ativo (nome, descrição, links) no banco de dados."""
-    salvar_ativo(nome, descricao)
-    ativo_id = obter_id_ativo(nome)  # Função para pegar o ID do ativo inserido
-    links = pegar_links(url)
-    salvar_links(ativo_id, links)
-
-def obter_id_ativo(nome):
-    """Obtém o ID de um ativo pelo nome (após inserção)."""
-    conn = conectar_db()
-    cursor = conn.cursor()
-    cursor.execute('''SELECT id FROM ativos WHERE nome = ?''', (nome,))
-    ativo_id = cursor.fetchone()[0]
-    conn.close()
-    return ativo_id
-
+    return dados
