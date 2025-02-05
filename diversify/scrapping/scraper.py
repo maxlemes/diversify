@@ -73,21 +73,7 @@ def limpar_nome_empresa(nome):
 
 def extrair_indicador(ativo, indicador):
 
-    url_income = income_tradingview(ativo)
-    url_stats = stats_tradingview(ativo)
-    ind_income = ['EPS']
-    ind_stats = ['ROE', 'ROIC']
-
-    driver = iniciar_navegador()
-
-    if indicador in ind_income:
-        driver.get(url_income)
-    else:
-        driver.get(url_stats)
-
-    # Espera explícita para garantir que o elemento esteja presente
-    wait = WebDriverWait(driver, 10)  # Espera até 15 segundos
-
+    # Ajustando o XPATH dos dados a setem extraidos
     anos_eps = [
         '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[16]/div/div[1]',
         '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[17]/div/div[1]',
@@ -122,13 +108,24 @@ def extrair_indicador(ativo, indicador):
         '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[21]/div/div',
     ]
 
+    # Ajutadondo os dados para coletar o EPS
     if indicador == 'EPS':
+        url = income_tradingview(ativo)  # Acesso a página de demonstracoes do TradingView
         anos_ind = anos_eps
         valores_ind = valores_eps
-    else:
-        if indicador == 'ROE':
+    
+    # Ajutadondo os dados para coletar o ROE
+    if indicador == 'ROE':
+            url = stats_tradingview(ativo) # Acesso a página de estatísticas do TradingView
             anos_ind = anos_roe
             valores_ind = valores_roe
+
+    # Inicia o navegador
+    driver = iniciar_navegador()
+    driver.get(url)
+   
+    # Espera explícita para garantir que o elemento esteja presente
+    wait = WebDriverWait(driver, 10)  # Espera até 15 segundos
 
     dados = []
 
@@ -160,6 +157,79 @@ def extrair_indicador(ativo, indicador):
         except Exception as e:
             print(f'Erro ao extrair dados: {e}')
             dados = None
+
+    except TimeoutException:
+        print('O elemento não foi encontrado dentro do tempo limite.')
+
+    driver.quit()
+    return dados
+
+def extrair_indicador2(ativo, indicador):
+
+    # Ajustando o XPATH dos dados a setem extraidos
+    anos_eps = [
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[16]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[17]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[18]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[19]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[20]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[1]/div[4]/div[21]/div/div[1]',
+    ]
+    valores_eps = [
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[16]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[17]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[18]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[19]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[20]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]/div[19]/div[5]/div[21]/div/div[1]',
+    ]
+
+    anos_roe = [
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[16]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[17]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[18]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[19]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[20]/div/div[1]',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[1]/div[4]/div[21]/div/div[1]',
+    ]
+    valores_roe = [
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[16]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[17]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[18]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[19]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[20]/div/div',
+        '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[6]/div[2]/div/div[1]/div[16]/div[5]/div[21]/div/div',
+    ]
+
+    tabela_eps = '/html/body/div[3]/div[4]/div[2]/div[2]/div/div/div[5]/div[2]/div/div[1]' 
+
+    # Ajutadondo os dados para coletar o EPS
+    if indicador == 'EPS':
+        url = income_tradingview(ativo)  # Acesso a página de demonstracoes do TradingView
+        anos_ind = anos_eps
+        valores_ind = valores_eps
+    
+    # Ajutadondo os dados para coletar o ROE
+    if indicador == 'ROE':
+            url = stats_tradingview(ativo) # Acesso a página de estatísticas do TradingView
+            anos_ind = anos_roe
+            valores_ind = valores_roe
+
+    # Inicia o navegador
+    driver = iniciar_navegador()
+    driver.get(url)
+   
+    # Espera explícita para garantir que o elemento esteja presente
+    wait = WebDriverWait(driver, 10)  # Espera até 15 segundos
+
+    dados = []
+
+    try:
+        # Localizar a tabela pelo XPath
+        tabela = driver.find_element(By.XPATH, tabela_eps)
+
+        # Capturar todas as linhas da tabela
+        dados = tabela.find_elements
 
     except TimeoutException:
         print('O elemento não foi encontrado dentro do tempo limite.')

@@ -28,6 +28,4 @@ curl --request POST \
 --user "YOUR_CLIENT_ID:YOUR_CLIENT_SECRET" \
 --header "Accept: application/vnd.github+json" \
 --header "X-GitHub-Api-Version: 2022-11-28" \
---data '{
-  "access_token": "ACCESS_TOKEN_TO_CHECK"
-}'
+--data '{"access_token": "ACCESS_TOKEN_TO_CHECK"}'

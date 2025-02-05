@@ -12,6 +12,6 @@ def iniciar_navegador():
     """Inicia e retorna uma instância do navegador Firefox."""
     service = Service(GeckoDriverManager().install())
     options = webdriver.FirefoxOptions()
-    options.add_argument('--headless')  # Executa o navegador sem abrir janela
+    #options.add_argument('--headless')  # Executa o navegador sem abrir janela
     driver = webdriver.Firefox(service=service, options=options)
     return driver

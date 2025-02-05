@@ -18,10 +18,16 @@ ativos = ['WEGE3', 'FESA4', 'LEVE3']
 # # Consultar ativos no banco
 # print(consultar_ativos("ativos"))
 
-for ativo in ativos:
-    eps = extrair_indicador(ativo, 'EPS')
-    salvar_indicadores(eps)
-    roe = extrair_indicador(ativo, 'ROE')
-    salvar_indicadores(roe)
+# for ativo in ativos:
+#     eps = extrair_indicador(ativo, 'EPS')
+#     salvar_indicadores(eps)
+#     roe = extrair_indicador(ativo, 'ROE')
+#     salvar_indicadores(roe)
 
-print(consultar_ativos('valores_ativos'))
+# print(consultar_ativos('valores_ativos'))
+
+    
+tabela = extrair_indicador2('FESA4', 'EPS')
+
+print(tabela)
+
