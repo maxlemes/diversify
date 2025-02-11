@@ -1,18 +1,18 @@
-# diversify/scrapping/urls.py
+# scrapping/fontes.py
 
 
 # DRE - Tradingview
-def income_tradingview(ativo):
+def dre_tradingview(ativo):
     base_url = 'https://br.tradingview.com/symbols/BMFBOVESPA-{}/financials-income-statement/?statements-period=FY'
     return base_url.format(ativo)
 
 # Balanço Patrimonial - Tradingview
-def balance_tradingview(ativo):
+def bp_tradingview(ativo):
     base_url = 'https://br.tradingview.com/symbols/BMFBOVESPA-{}/financials-balance-sheet/?statements-period=FY'
     return base_url.format(ativo)
 
 # Fluxo de Caixa - Tradingview
-def cash_tradingview(ativo):
+def fc_tradingview(ativo):
     base_url = 'https://br.tradingview.com/symbols/BMFBOVESPA-{}/financials-cash-flow/?statements-period=FY'
     return base_url.format(ativo)
 
@@ -32,11 +32,11 @@ def ests_tradingview(ativo):
     return base_url.format(ativo)
 
 # Perfil - Moneytimes
-def descricao_moneytimes(ativo):
+def perfil_moneytimes(ativo):
     base_url = 'https://www.moneytimes.com.br/cotacao/{}/'
     return base_url.format(ativo)
 
 # Perfil - Yahoo Finance
-def profile_yahoo(ativo):
+def perfil_yahoo(ativo):
     base_url = 'https://finance.yahoo.com/quote/{}.SA/profile/'
     return base_url.format(ativo)
