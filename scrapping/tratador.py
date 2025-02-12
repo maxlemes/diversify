@@ -2,8 +2,9 @@ import pandas as pd
 import re
 
 class TratadorDeDados:
-    def __init__(self, dados):
+    def __init__(self, ativo, dados):
         """Inicializa a classe com os dados coletados."""
+        self.ativo = ativo
         self.dados = dados
 
     def processar_cabecalho(self, linha):
@@ -127,4 +128,31 @@ class TratadorDeDados:
         # Criando a coluna 'check' com o produto das últimas 6 colunas (ignorando NaN)
         df['chk'] = df.iloc[:, -6:].prod(axis=1, skipna=True)
 
+        # Reorganizar as colunas:
+        if df.shape[1] > 2:  # Garantir que há pelo menos três colunas
+            colunas = df.columns.tolist()
+            ultima = colunas[-1]   # Última coluna
+            penultima = colunas[-2]  # Penúltima coluna
+            
+            # Nova ordem: primeira, última, penúltima, e o restante
+            nova_ordem = [colunas[0], ultima, penultima] + colunas[1:-2]
+            df = df[nova_ordem]
+
+            # Renomear a 1a coluna
+            df.columns = ['item', 'chk', 'ttm'] + list(df.columns[3:])
+
+            # Adicionando a primeira coluna com o ativo
+            df.insert(0,'ativo', self.ativo)
+
         return df
+    
+    def processar_dataframe(self,  df):
+        for index, row in df.iterrows():
+            item = row['item']
+            chk = row['chk']
+            ttm = row['ttm']
+        
+        # Criando o dicionário de anos
+        anos = {int(ano): row[ano] for ano in df.columns if ano.isdigit()}
+        return item, chk, ttm, anos
+

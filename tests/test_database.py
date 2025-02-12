@@ -1,7 +1,7 @@
 # main.py
 import pandas as pd
 
-from diversify.empresas import *
+from scrapping.empresas import *
 from database.banco_de_dados import BancoDeDados
 
 # Conectando ao banco de dados

@@ -28,12 +28,13 @@ class GerenciadorBanco:
             # Tabela 'perfil'
             comando_perfil = '''
             CREATE TABLE IF NOT EXISTS perfil (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                id INTEGER PRIMARY KEY,
                 nome TEXT NOT NULL,
                 ticker TEXT NOT NULL,
                 setor TEXT,
                 subsetor TEXT,
-                descricao TEXT
+                descricao TEXT,
+                UNIQUE (ticker)
             );
             '''
             cursor.execute(comando_perfil)
@@ -43,6 +44,7 @@ class GerenciadorBanco:
             for tabela in tabelas:
                 comando_tabela = f'''
                 CREATE TABLE IF NOT EXISTS {tabela} (
+                    id INTEGER PRIMARY KEY,
                     ativo TEXT NOT NULL,
                     item TEXT NOT NULL,
                     chk REAL,
@@ -52,7 +54,7 @@ class GerenciadorBanco:
                     ano_2021 REAL,
                     ano_2022 REAL,
                     ano_2023 REAL,
-                    PRIMARY KEY (ativo, chk)
+                    UNIQUE (ativo, chk)
                 );
                 '''
                 cursor.execute(comando_tabela)

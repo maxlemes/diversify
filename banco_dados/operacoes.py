@@ -1,14 +1,11 @@
 import sqlite3
 import logging
+import pandas as pd
+
+import diversify.config_log
 
 from banco_dados.gerenciador import GerenciadorBanco
 
-# Configuração do log
-logging.basicConfig(
-    filename="operacoes_banco.log", 
-    level=logging.INFO, 
-    format="%(asctime)s - %(levelname)s - %(message)s"
-)
 
 class OperacoesBanco:
     def __init__(self, gerenciador: GerenciadorBanco):
@@ -76,7 +73,7 @@ class OperacoesBanco:
             if cursor:
                 self.gerenciador.conexao.commit()
                 logging.info(f"Dados inseridos na tabela '{tabela}' para o ativo '{ativo}'.")
-                print(f"Dados inseridos na tabela '{tabela}' para o ativo '{ativo}'.")
+                # print(f"Dados inseridos na tabela '{tabela}' para o ativo '{ativo}'.")
         except sqlite3.Error as erro:
             logging.error(f"Erro ao inserir dados financeiros: {erro}")
             print(f"Erro ao inserir dados financeiros: {erro}")
@@ -105,8 +102,52 @@ class OperacoesBanco:
             logging.error(f"Erro ao consultar o perfil: {erro}")
             print(f"Erro ao consultar o perfil: {erro}")
             return None
+    
+   
+    def consultar_financas(self, tabela, ativo=None, termo=None):
+        """Consulta dados financeiros filtrando por ativo, tabela e descrição do item com base em um termo fornecido."""
+        if tabela not in ['dre', 'bp', 'fc', 'stats', 'divs', 'ests']:
+            logging.error(f"Tabela '{tabela}' não é válida.")
+            print(f"Erro: Tabela '{tabela}' não é válida.")
+            return 
 
-    def consultar_financas(self, tabela, ativo, termo):
+        # Construir a consulta de forma dinâmica, dependendo de quais parâmetros foram passados
+        consulta = f'SELECT * FROM {tabela} WHERE 1=1 '
+        parametros = []
+
+        # Se um ativo for fornecido, adicionar o filtro para o ativo
+        if ativo:
+            consulta += 'AND LOWER(ativo) = LOWER(?) '
+            parametros.append(ativo.lower())
+
+        # Se um termo for fornecido, adicionar o filtro para o item (com LIKE)
+        if termo:
+            consulta += 'AND LOWER(item) LIKE LOWER(?) '
+            parametros.append(f'%{termo.lower()}%')
+
+        consulta += 'ORDER BY ativo;'
+
+        try:
+            # Executar a consulta
+            cursor = self._executar_consulta(consulta, tuple(parametros))
+
+            if cursor:
+                resultados = cursor.fetchall()
+                if resultados:
+                    logging.info(f"Resultados encontrados para {'ativo' if ativo else ''} "
+                                f"{ativo if ativo else ''} na tabela '{tabela}':")
+                    return [list(resultado) for resultado in resultados]  # Retorna os resultados em formato de lista
+                else:
+                    logging.info(f"Nenhum resultado encontrado para o ativo '{ativo}' na tabela '{tabela}'.")
+                    print(f"Nenhum resultado encontrado para o ativo '{ativo}' na tabela '{tabela}'.")
+
+        except sqlite3.Error as erro:
+            logging.error(f"Erro ao consultar dados financeiros: {erro}")
+            print(f"Erro ao consultar dados financeiros: {erro}")
+            return []
+
+
+    def consultar_financas2(self, tabela, ativo, termo):
         """Consulta dados financeiros filtrando por ativo, tabela e descrição do item com base em um termo fornecido."""
         if tabela not in ['dre', 'bp', 'fc', 'stats', 'divs', 'ests']:
             logging.error(f"Tabela '{tabela}' não é válida.")
@@ -190,7 +231,7 @@ class OperacoesBanco:
 
                 self.gerenciador.conexao.commit()
                 logging.info(f"Dados atualizados na tabela '{tabela}' para o ativo '{ativo}'.")
-                print(f"Dados atualizados na tabela '{tabela}' para o ativo '{ativo}'.")
+                # print(f"Dados atualizados na tabela '{tabela}' para o ativo '{ativo}'.")
             else:
                 logging.info(f"Registro não encontrado para o ativo '{ativo}' e item '{item}', realizando inserção.")
                 self._inserir_dados_financeiros(tabela, ativo, item, chk, ttm, anos)
@@ -198,6 +239,23 @@ class OperacoesBanco:
         except sqlite3.Error as erro:
             logging.error(f"Erro ao atualizar dados financeiros: {erro}")
             print(f"Erro ao atualizar dados financeiros: {erro}")
+    
+    def inserir_dataframe(self, tabela, df):
+        """Processa o DataFrame e insere os dados no banco de dados."""
+        
+        for index, row in df.iterrows():
+            ativo = row['ativo']
+            item = row['item']
+            chk = row['chk']
+            ttm = row['ttm']
+            
+            # Criando o dicionário de anos
+            anos = {int(ano): row[ano] for ano in df.columns if ano.isdigit()}
+            
+            # Chamando a função para inserir no banco
+            self.inserir_financas(tabela, ativo, item, chk, ttm, anos)
+            
+        print(f"Dados do ativo {ativo} inseridos com sucesso.")
 
     def remover_financas(self, tabela, ativo, item, chk):
         """Remove um registro financeiro de uma tabela específica com base no ativo, item e chk."""

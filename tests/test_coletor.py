@@ -1,7 +1,7 @@
 import sqlite3
 
 from scrapping.coletor import Coletor
-from scrapping.tratador_de_dados import TratadorDeDados
+from scrapping.tratador import TratadorDeDados
 from database.banco_de_dados import BancoDeDados
 
 
