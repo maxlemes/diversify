@@ -1,0 +1,12 @@
+repos:
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1  # Certifique-se de usar a versão mais recente
+    hooks:
+      - id: isort
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0  # Escolha a versão mais recente ou específica do black
+    hooks:
+      - id: black
+        language_version: python3  # Certifique-se de que o python3 está sendo usado no seu projeto
+
