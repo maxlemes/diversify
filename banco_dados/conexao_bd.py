@@ -9,7 +9,7 @@ logging.basicConfig(
 
 
 class ConexaoBD:
-    def __init__(self, db_file):
+    def __init__(self):
         """
         Construtor da classe ConexaoBD.
 
@@ -20,10 +20,19 @@ class ConexaoBD:
         Parâmetros:
             db_file (str): O caminho do arquivo do banco de dados SQLite.
         """
-        self.db_file = db_file  # Armazena o caminho para o banco de dados
+        self.db_file = (
+            "dados/banco_de_dados.db"  # Armazena o caminho para o banco de dados
+        )
         self.conn = None  # Inicializa a conexão como None
         self.cursor = None  # Inicializa o cursor como None
         logging.debug(f"Conexão iniciada com o banco de dados: {self.db_file}")
+
+    def __enter__(self):
+        self.conectar()
+        return self  # Retorna a instância para ser usada dentro do bloco 'with'
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.desconectar()  # Fecha a conexão automaticamente
 
     def conectar(self):
         """Estabelece a conexão com o banco de dados SQLite."""
@@ -87,3 +96,12 @@ class ConexaoBD:
             logging.error(f"Erro ao salvar alterações no banco de dados: {e}")
             logging.debug(traceback.format_exc())
             raise  # Levanta a exceção para ser tratada no código que chamou o método
+
+    def rollback(self):
+        self.conn.rollback()  # Aqui, rollback é suportado pela conexão
+
+
+# # Uso:
+# with ConexaoBD() as db:
+#     db.executar_query("INSERT INTO tabela (coluna) VALUES (?)", ("valor",))
+#     db.commit()  # As alterações são salvas normalmente

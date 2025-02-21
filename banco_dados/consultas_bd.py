@@ -2,97 +2,201 @@ import logging
 
 from banco_dados.conexao_bd import ConexaoBD
 
-# Configuração do logging para desenvolvimento
 logging.basicConfig(
     level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
 
-class ConsultaBD:
-    def __init__(self, db_file):
+class ConsultasBD:
+    def __init__(self, banco_dados):
         """
-        Construtor da classe Consulta.
-
-        Inicializa a classe com o arquivo do banco de dados e prepara
-        para realizar consultas SELECT no banco de dados.
+        Construtor da classe ConsultasBD.
 
         Parâmetros:
-            db_file (str): O caminho do arquivo do banco de dados SQLite.
+            banco_dados (ConexaoBD): Instância da classe ConexaoBD para interagir com o banco de dados.
         """
+        self.bd = banco_dados
 
-        self.db_file = db_file  # Caminho para o banco de dados
-        self.conexao = ConexaoBD(
-            self.db_file
-        )  # Instancia a classe ConexaoBD para conectar ao banco
-
-    def cotacoes(self, ticker):
+    def _executar_consulta(self, query, parametros=None):
         """
-        Consulta os preços das ações com base no ticker fornecido.
+        Executa uma consulta SQL no banco de dados.
 
-        Parâmetro:
-        - ticker: O ticker da ação para a qual as cotações serão consultadas.
+        Parâmetros:
+            query (str): Comando SQL para consulta.
+            parametros (tuple, opcional): Parâmetros da consulta.
 
         Retorna:
-        - Uma lista de tuplas contendo o ticker, data e preço das ações.
+            list: Lista de tuplas com os resultados da consulta.
         """
         try:
-            # Consulta SQL para pegar os preços das ações pelo ticker
-            consulta = """
-            SELECT p.ticker, c.data, c.preco
-            FROM perfil p
-            JOIN cotacoes c ON p.id = c.perfil_id
-            WHERE p.ticker = ?
-            """
-
-            # Executa a consulta
-            cursor = self.banco_dados.cursor()
-            cursor.execute(consulta, (ticker,))
-
-            # Obter todos os resultados
-            resultados = cursor.fetchall()
-
-            if resultados:
-                return resultados
+            cursor = self.bd.cursor
+            if parametros:
+                cursor.execute(query, parametros)
             else:
-                print(f"Nenhum dado encontrado para o ticker '{ticker}'.")
-                return []
-
-        except sqlite3.Error as e:
-            print(f"Erro ao consultar os dados: {e}")
-            return []
-
-    def consultar(self, query, params=None):
-        """
-        Realiza uma consulta SELECT no banco de dados.
-
-        Executa a query SQL do tipo SELECT e retorna os resultados.
-
-        Parâmetros:
-            query (str): A consulta SQL a ser executada.
-            params (tuple ou list, opcional): Parâmetros a serem passados para a query.
-
-        Retorna:
-            list: Uma lista contendo as linhas retornadas pela consulta.
-        """
-
-        try:
-            # Estabelece a conexão com o banco
-            self.conexao.conectar()
-            # Executa a query
-            self.conexao.executar_query(query, params)
-            # Recupera os resultados da consulta
-            resultados = self.conexao.cursor.fetchall()
-            logging.debug(f"Consulta realizada com sucesso: {query}")
-            return resultados
+                cursor.execute(query)
+            return cursor.fetchall()
         except Exception as e:
             logging.error(f"Erro ao consultar dados: {e}")
-            raise  # Levanta a exceção para ser tratada no código que chamou o método
-        finally:
-            # Garante que a conexão será fechada após a operação
-            self.conexao.desconectar()
+            return []
+
+    def listar_tabelas(self):
+        query = "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;"
+        return [t[0] for t in self._executar_consulta(query)]
+
+    def consultar_tabelas(self, tabela, coluna):
+        query = f"SELECT DISTINCT {coluna} FROM {tabela} ORDER BY {coluna};"
+        return [t[0] for t in self._executar_consulta(query)]
+
+    def buscar_perfil(self, nome=None, ticker=None, setor=None, subsetor=None):
+        """
+        Busca registros na tabela 'perfil' com base nos filtros fornecidos.
+
+        Parâmetros:
+            nome (str, opcional): Nome da empresa.
+            ticker (str, opcional): Código do ativo.
+            setor (str, opcional): Setor da empresa.
+            subsetor (str, opcional): Subsetor da empresa.
+
+        Retorna:
+            list: Lista de tuplas com os resultados encontrados.
+        """
+        query = "SELECT * FROM perfil WHERE 1=1"
+        parametros = []
+
+        if nome:
+            query += " AND nome LIKE ?"
+            parametros.append(f"%{nome}%")
+        if ticker:
+            query += " AND ticker = ?"
+            parametros.append(ticker)
+        if setor:
+            query += " AND setor LIKE ?"
+            parametros.append(f"%{setor}%")
+        if subsetor:
+            query += " AND subsetor LIKE ?"
+            parametros.append(f"%{subsetor}%")
+
+        perfil = self._executar_consulta(query, tuple(parametros))
+
+        if perfil:
+            colunas = [
+                "id",
+                "nome",
+                "ticker",
+                "setor",
+                "subsetor",
+                "website",
+                "descricao",
+            ]
+            resultado = dict(zip(colunas, perfil[0]))
+        else:
+            None
+
+        return resultado
+
+    def buscar_perfil_id(self, ticker):
+        """
+        Busca o perfil_id de um ativo baseado no ticker.
+
+        Parâmetros:
+            ticker (str): Código do ativo.
+
+        Retorna:
+            int | None: O perfil_id correspondente ou None se não encontrado.
+        """
+        try:
+            query = "SELECT id FROM perfil WHERE ticker = ?;"
+            resultado = self._executar_consulta(query, (ticker,))
+
+            if resultado:
+                return resultado[0][0]  # Retorna o perfil_id encontrado
+            else:
+                logging.warning(f"Ticker '{ticker}' não encontrado na tabela 'perfil'.")
+                return None
+
+        except Exception as e:
+            logging.error(f"Erro ao buscar perfil_id para {ticker}: {e}")
+            return None
+
+    def buscar_cotacoes(self, ticker):
+        """
+        Consulta as cotações de uma empresa com base no ticker informado.
+
+        Parâmetros:
+            ticker (str): O ticker da empresa a ser consultada.
+
+        Retorna:
+            list[dict]: Lista de dicionários contendo as cotações da empresa.
+        """
+        query = """
+            SELECT c.*
+            FROM cotacoes c
+            JOIN perfil p ON c.perfil_id = p.id
+            WHERE p.ticker = ?;
+        """
+        resultado = self._executar_consulta(query, (ticker,))
+
+        # Convertendo para lista de dicionários
+        colunas = [
+            "perfil_id",
+            "data",
+            "open",
+            "high",
+            "low",
+            "close",
+            "adj_close",
+            "volume",
+        ]
+        return [dict(zip(colunas, linha)) for linha in resultado]
+
+    def buscar_dre(self, ticker):
+        """
+        Consulta os dados da Demonstração do Resultado do Exercício (DRE) de uma empresa com base no ticker informado.
+
+        Parâmetros:
+            ticker (str): O ticker da empresa a ser consultada.
+
+        Retorna:
+            list[dict]: Lista de dicionários contendo os dados da DRE da empresa.
+        """
+        query = """
+            SELECT d.*
+            FROM dre d
+            JOIN perfil p ON d.perfil_id = p.id
+            WHERE p.ticker = ?;
+        """
+        resultado = self._executar_consulta(query, (ticker,))
+
+        # Definir os nomes das colunas conforme a estrutura da tabela dre
+        colunas = [
+            "perfil_id",
+            "ano",
+            "receita_total",
+            "custo_receita",
+            "lucro_bruto",
+            "despesa_operacional",
+            "lucro_operacional",
+            "lucro_antes_impostos",
+            "provisao_impostos",
+            "lucro_liquido",
+            "eps_basico",
+            "despesas_totais",
+            "lucro_normalizado",
+            "juros_recebidos",
+            "juros_pagos",
+            "lucro_juros",
+            "ebit",
+            "ebitda",
+            "depreciacao",
+            "ebitda_normalizado",
+        ]
+
+        return [dict(zip(colunas, linha)) for linha in resultado]
 
 
-# Exemplo de uso:
-# consulta = Consulta('meu_banco.db')
-# resultados = consulta.consultar('SELECT * FROM usuarios WHERE idade > 18')
-# print(resultados)
+# Exemplo de uso
+if __name__ == "__main__":
+    with ConexaoBD() as bd:
+        consultas = ConsultasBD(bd)
+        resultado = consultas.buscar_perfil(nome="Petrobras")
+        print(resultado)

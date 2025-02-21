@@ -95,3 +95,64 @@ A chave `.keys()` do dicionário retornará uma lista com todas as chaves do dic
 Essa é uma visão geral dos principais campos e seus significados. Alguma informação específica que você quer explorar melhor?
 
 
+
+
+No `yfinance`, além de `.balance_sheet`, `.financials` e `.cashflow`, você pode acessar outras informações financeiras de uma empresa. Aqui estão algumas das principais opções disponíveis:
+
+1. **`.info`**: Contém informações gerais sobre a empresa, como nome, setor, número de funcionários, entre outros dados.
+   ```python
+   ticker.info
+   ```
+
+2. **`.history()`**: Retorna o histórico de preços das ações, como preços de abertura, fechamento, volume, etc. Você pode especificar o período e a frequência.
+   ```python
+   ticker.history(period="1y", interval="1d")
+   ```
+
+3. **`.actions`**: Retorna dados sobre ações corporativas, como splits de ações e dividendos pagos.
+   ```python
+   ticker.actions
+   ```
+
+4. **`.dividends`**: Retorna informações sobre os dividendos pagos pela empresa.
+   ```python
+   ticker.dividends
+   ```
+
+5. **`.splits`**: Retorna informações sobre os splits das ações.
+   ```python
+   ticker.splits
+   ```
+
+6. **`.sustainability`**: Retorna informações sobre a sustentabilidade e desempenho ambiental, social e de governança (ESG) da empresa.
+   ```python
+   ticker.sustainability
+   ```
+
+7. **`.calendar`**: Retorna o calendário de eventos importantes para a empresa, como divulgação de resultados, dividendos, etc.
+   ```python
+   ticker.calendar
+   ```
+
+8. **`.actions`**: Fornece informações sobre eventos corporativos, como dividendos e splits.
+   ```python
+   ticker.actions
+   ```
+
+9. **`.major_holders`**: Retorna informações sobre os principais acionistas da empresa.
+   ```python
+   ticker.major_holders
+   ```
+
+10. **`.institutional_holders`**: Retorna informações sobre os acionistas institucionais da empresa.
+    ```python
+    ticker.institutional_holders
+    ```
+
+11. **`.options`**: Retorna as datas de vencimento disponíveis para as opções da empresa.
+    ```python
+    ticker.options
+    ```
+
+Esses métodos podem ser usados para acessar diferentes tipos de informações financeiras e corporativas diretamente da API do Yahoo Finance.
+

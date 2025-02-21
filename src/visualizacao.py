@@ -7,14 +7,14 @@ def grafico_comparativo(
     dados_1,
     dados_2,
     labels=None,
-    legenda_1='Série 1',
-    legenda_2='Série 2',
-    titulo='Gráfico Comparativo',
-    xlabel='Categorias',
-    ylabel='Valores',
+    legenda_1="Série 1",
+    legenda_2="Série 2",
+    titulo="Gráfico Comparativo",
+    xlabel="Categorias",
+    ylabel="Valores",
     largura_barra=0.3,
-    cor_1='skyblue',
-    cor_2='orange',
+    cor_1="skyblue",
+    cor_2="orange",
     rotacao_xticks=45,
     tamanho_figura=(10, 6),
 ):
@@ -53,7 +53,7 @@ def grafico_comparativo(
         width=largura_barra,
         label=legenda_1,
         color=cor_1,
-        align='center',
+        align="center",
     )
     plt.bar(
         [p + largura_barra for p in x],
@@ -61,15 +61,13 @@ def grafico_comparativo(
         width=largura_barra,
         label=legenda_2,
         color=cor_2,
-        align='center',
+        align="center",
     )
 
     plt.xlabel(xlabel, fontsize=12)
     plt.ylabel(ylabel, fontsize=12)
     plt.title(titulo, fontsize=16)
-    plt.xticks(
-        [p + largura_barra / 2 for p in x], labels, rotation=rotacao_xticks
-    )
+    plt.xticks([p + largura_barra / 2 for p in x], labels, rotation=rotacao_xticks)
     plt.legend()
 
     return plt

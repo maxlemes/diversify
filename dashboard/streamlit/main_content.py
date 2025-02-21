@@ -1,6 +1,7 @@
-import streamlit as st
-from graficos import criar_grafico, grafico_comparativo
 import plotly.colors  # Importando a biblioteca de cores do Plotly
+import streamlit as st
+
+from graficos import criar_grafico, grafico_comparativo
 
 
 def show_main_content(investimentos, aporte, distribuicao):
@@ -45,12 +46,12 @@ def show_main_content(investimentos, aporte, distribuicao):
     # Gráfico de rosca para os investimentos
     with col1:
         fig1 = criar_grafico(
-            'rosca',
+            "rosca",
             {
                 ativo: (valor / investimentos_total) * 100
                 for ativo, valor in investimentos.items()
             },
-            'Distribuição Atual',
+            "Distribuição Atual",
             cores_padrao,
         )
         st.markdown(
@@ -62,7 +63,7 @@ def show_main_content(investimentos, aporte, distribuicao):
     # Gráfico de rosca para a distribuição desejada
     with col2:
         fig2 = criar_grafico(
-            'rosca', distribuicao, 'Distribuição Desejada', cores_padrao
+            "rosca", distribuicao, "Distribuição Desejada", cores_padrao
         )
         st.markdown(
             "<h3 style='text-align: center;'>Distribuição Desejada</h3>",
@@ -71,9 +72,7 @@ def show_main_content(investimentos, aporte, distribuicao):
         st.plotly_chart(fig2)  # Exibe o gráfico de rosca
 
     # 📌 Calcular valores reais para distribuição desejada e atual
-    distribuicao_atual = {
-        ativo: valor for ativo, valor in investimentos.items()
-    }
+    distribuicao_atual = {ativo: valor for ativo, valor in investimentos.items()}
     distribuicao_desejada = {
         ativo: (patrimonio_total * percentual / 100)
         for ativo, percentual in distribuicao.items()
@@ -83,7 +82,7 @@ def show_main_content(investimentos, aporte, distribuicao):
     fig_comparativo = grafico_comparativo(
         distribuicao_atual,
         distribuicao_desejada,
-        'Distribuição Atual vs. Desejada',
+        "Distribuição Atual vs. Desejada",
     )
 
     # Exibir o gráfico no Streamlit
@@ -95,10 +94,7 @@ def show_main_content(investimentos, aporte, distribuicao):
 
     # Calcular a diferença em valores absolutos entre a distribuição atual e a desejada
     diferencias = {
-        ativo: (
-            distribuicao_desejada.get(ativo, 0)
-            - distribuicao_atual.get(ativo, 0)
-        )
+        ativo: (distribuicao_desejada.get(ativo, 0) - distribuicao_atual.get(ativo, 0))
         for ativo in distribuicao_atual
     }
 
