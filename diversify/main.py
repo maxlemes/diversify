@@ -1,6 +1,6 @@
 # Importando as classes que você criou
-from banco_dados.gerenciador import GerenciadorBanco
-from banco_dados.operacoes import OperacoesBanco
+from database.gerenciador import GerenciadorBanco
+from database.operacoes import OperacoesBanco
 from scrapping.empresas import EMPRESAS
 
 if __name__ == "__main__":

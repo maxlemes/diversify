@@ -1,8 +1,8 @@
 import logging
 import sqlite3
 
-from banco_dados.consultas_bd import ConsultasBD
-from banco_dados.gerenciamento_bd import GerenciadorBD
+from database.consultas_bd import ConsultasBD
+from database.gerenciamento_bd import GerenciadorBD
 
 # from banco_dados.conexao_bd import ConexaoBD
 

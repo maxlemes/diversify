@@ -6,8 +6,8 @@ import pandas as pd
 import yfinance as yf
 
 import diversify.config_log
-from banco_dados.gerenciador import GerenciadorBanco
-from banco_dados.operacoes import OperacoesBanco
+from database.gerenciador import GerenciadorBanco
+from database.operacoes import OperacoesBanco
 from scrapping.fontes import FONTES
 from scrapping.raspador import Raspador
 from scrapping.tratador import TratadorDeDados

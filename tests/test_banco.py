@@ -1,7 +1,7 @@
 import pytest
 
-from banco_dados.gerenciador import GerenciadorBanco
-from banco_dados.operacoes import OperacoesBanco
+from database.gerenciador import GerenciadorBanco
+from database.operacoes import OperacoesBanco
 
 
 @pytest.fixture

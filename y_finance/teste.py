@@ -1,8 +1,8 @@
 import yfinance as yf
 
-from banco_dados.conexao_bd import ConexaoBD
-from banco_dados.consultas_bd import ConsultasBD
-from banco_dados.gerenciamento_bd import GerenciadorBD
+from database.consultas_bd import ConsultasBD
+from database.db_manager import ConexaoBD
+from database.gerenciamento_bd import GerenciadorBD
 from diversify.github_api import GitHubAPI
 from y_finance.empresa import Empresa
 from y_finance.estimativas import Estimar

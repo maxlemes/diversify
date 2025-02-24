@@ -1,8 +1,8 @@
 import pandas as pd
 import yfinance as yf
 
-from banco_dados.gerenciador import GerenciadorBanco
-from banco_dados.operacoes import OperacoesBanco
+from database.gerenciador import GerenciadorBanco
+from database.operacoes import OperacoesBanco
 from diversify.github_api import GitHubAPI
 from scrapping.coletor import Coletor
 from scrapping.dados_teste import DADOS_TESTE

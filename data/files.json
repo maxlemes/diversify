@@ -1,0 +1,5 @@
+{
+    "database": "data/database.db",
+    "tables": "data/tables.json",
+    "filters": "data/filters.json"
+}
