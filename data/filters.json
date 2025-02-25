@@ -1,5 +1,5 @@
 {
-    "income_statement": {
+    "income_stmt": {
         "Total Revenue": "total_revenue",
         "Cost Of Revenue": "cost_of_revenue",
         "Gross Profit": "gross_profit",
@@ -22,8 +22,8 @@
         "Cash And Cash Equivalents": "cash_and_cash_equivalents",
         "Current Assets": "current_assets",
         "Goodwill And Other Intangible Assets": "goodwill_and_intangible_assets",
-        "Long Term Equity Investment": "long_term_investment",
-        "Total Non Current Assets": "total_non_current_assets",
+        "Long Term Equity Investment": "long_term_investments",
+        "Total Non Current Assets": "non_current_assets",
         "Total Assets": "total_assets",
         "Dividends Payable": "dividends_payable",
         "Current Debt": "current_debt",

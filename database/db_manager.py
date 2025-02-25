@@ -169,7 +169,7 @@ class DatabaseManager:
         except sqlite3.Error as e:
             print(f"Error inserting data into table {table}: {e}")
 
-    def insert_data_id(self, table, columns, data):
+    def update_data(self, table, columns, data):
         """Generic function to insert data into any table in the database."""
         try:
             columns_str = ", ".join(columns)
@@ -179,7 +179,7 @@ class DatabaseManager:
             query = f"""
                 INSERT INTO {table} ({columns_str})
                 VALUES ({placeholders})
-                ON CONFLICT(profile_id, date) DO UPDATE SET {update_str};
+                ON CONFLICT(profile_id, year) DO UPDATE SET {update_str};
             """
             for entry in data:
                 self.cursor.execute(query, entry + entry)
@@ -189,33 +189,31 @@ class DatabaseManager:
         except sqlite3.Error as e:
             print(f"Error inserting data into table {table}: {e}")
 
-        def fetch_data(self, table, **filters):
-            """
-            Retrieves data from any database table based on provided filters.
+    def fetch_data(self, table, **filters):
+        """
+        Retrieves data from any database table based on provided filters.
 
-            Parameters:
-                table (str): Name of the table to query.
-                **filters (kwargs): Filters in the format column=value.
+        Parameters:
+            table (str): Name of the table to query.
+            **filters (kwargs): Filters in the format column=value.
 
-            Returns:
-                list[dict]: A list of dictionaries containing the query results.
-            """
-            query = f"SELECT * FROM {table} WHERE 1=1"
-            parameters = []
+        Returns:
+            list[dict]: A list of dictionaries containing the query results.
+        """
+        query = f"SELECT * FROM {table} WHERE 1=1"
+        parameters = []
 
-            for column, value in filters.items():
-                query += f" AND {column} = ?"
-                parameters.append(value)
+        for column, value in filters.items():
+            query += f" AND {column} = ?"
+            parameters.append(value)
 
-            try:
-                self.cursor.execute(query, tuple(parameters))
-                columns = [
-                    desc[0] for desc in self.cursor.description
-                ]  # Get column names
-                return [dict(zip(columns, row)) for row in self.cursor.fetchall()]
-            except Exception as e:
-                logging.error(f"Error fetching data from table {table}: {e}")
-                return []
+        try:
+            self.cursor.execute(query, tuple(parameters))
+            columns = [desc[0] for desc in self.cursor.description]  # Get column names
+            return [dict(zip(columns, row)) for row in self.cursor.fetchall()]
+        except Exception as e:
+            logging.error(f"Error fetching data from table {table}: {e}")
+            return []
 
     def fetch_profile_id(self, ticker):
         """Fetches the profile_id from the profile table for a single ticker."""
@@ -246,7 +244,7 @@ class DatabaseManager:
                 self.cursor.execute(query)  # Executes the query without parameters
 
             # Returns the number of affected rows.
-            return self.cursor.rowcount
+            return self.cursor.fetchall()
 
         except sqlite3.Error as e:
             logging.error(f"Error executing query: {e}")

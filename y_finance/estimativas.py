@@ -23,7 +23,7 @@ class Estimar:
         self.consulta = ConsultasBD(self.bd)
         self.gerenciador = GerenciadorBD(self.bd)
 
-    def calcular_roe(self, ticker):
+    def fetch_roe(self, profile_id):
         """
         Calcula o ROE (Return on Equity) de um ativo específico com base no ticker.
 
@@ -34,29 +34,18 @@ class Estimar:
             list: Lista de tuplas contendo (perfil_id, ano, roe).
         """
         try:
-            # Buscar o perfil_id correspondente ao ticker
-            perfil_id = self.consulta.buscar_perfil_id(ticker)
-            if perfil_id is None:
-                return []
-
             # Agora buscar o ROE apenas para esse perfil_id
             query_roe = """
             SELECT 
-                dre.perfil_id,
-                dre.ano, 
-                (dre.lucro_liquido / bp.patrimonio_liquido) AS roe
-            FROM dre
-            JOIN bp ON dre.perfil_id = bp.perfil_id AND dre.ano = bp.ano
-            WHERE dre.perfil_id = ? AND bp.patrimonio_liquido IS NOT NULL;
+                income_stmt.profile_id,
+                income_stmt.year, 
+                (income_stmt.net_income / balance_sheet.stockholders_equity) AS roe
+            FROM income_stmt
+            JOIN balance_sheet ON income_stms.profile_id = balance_sheet.profile_id AND income_stmt.year = balance_sheet.year
+            WHERE income.profile_id = ? AND balance_sheet.stockholders_equity IS NOT NULL;
             """
 
-            dados = self.consulta._executar_consulta(query_roe, (perfil_id,))
-            print(dados)
-
-            # Inserir os dados
-            tabela = "stats"
-            colunas = ["perfil_id", "ano", "roe"]
-            self.gerenciador.insert_stats(tabela, colunas, dados)
+            return self.consulta._executar_consulta(query_roe, (profile_id,))
 
         except Exception as e:
             logging.error(f"Erro ao calcular ROE para {ticker}: {e}")

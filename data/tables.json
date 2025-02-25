@@ -20,7 +20,7 @@
         "PRIMARY KEY": "(profile_id, date)",
         "FOREIGN KEY": "(profile_id) REFERENCES profile(id) ON DELETE CASCADE"
     },
-    "income_statement": {
+    "income_stmt": {
         "profile_id": "INTEGER",
         "year": "TEXT NOT NULL",
         "total_revenue": "REAL",
@@ -77,7 +77,7 @@
         "depreciation_and_amortization": "REAL",
         "working_capital_variation": "REAL",
         "operating_cash_flow": "REAL",
-        "investment_cash_flow": "REAL",
+        "investing_cash_flow": "REAL",
         "dividends_paid": "REAL",
         "financing_cash_flow": "REAL",
         "cash_variation": "REAL",
@@ -91,9 +91,9 @@
         "PRIMARY KEY": "(profile_id, year)",
         "FOREIGN KEY": "(profile_id) REFERENCES profile(id) ON DELETE CASCADE"
     },
-    "stats": {
+    "ests": {
         "profile_id": "INTEGER",
-        "year": "INTEGER NOT NULL",
+        "year": "TEXT NOT NULL",
         "roe": "REAL",
         "payout": "REAL",
         "dividends": "REAL",
