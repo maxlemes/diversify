@@ -1,6 +1,7 @@
 import json
 import logging
 from pathlib import Path
+import datetime as dt
 
 import pandas as pd
 
@@ -103,43 +104,111 @@ class DataHandler:
 
     def process_balance_ttm(self, balance_type, data):
         """
-        Processes raw income statement data by cleaning and formatting it.
+        Processes raw balance sheet or income statement data by cleaning and formatting it.
 
-        :param data: Raw income statement data as a DataFrame.
+        :param balance_type: Type of balance data, either "balance_sheet" or another type.
+        :param data: Raw financial data as a DataFrame.
         :return: A list of tuples containing processed data, including headers.
         """
 
-        if balance_type is not "balance_sheet":
+        # Calculate 'ttm' (Trailing Twelve Months) based on balance type
+        if balance_type != "balance_sheet":
+            # For income statement data, sum the last four quarters
             data["ttm"] = data.iloc[:, :4].sum(axis=1)
         else:
+            # For balance sheet data, take the average of the last four quarters
             data["ttm"] = data.iloc[:, :4].mean(axis=1)
 
+        # Transpose the DataFrame to switch rows and columns
         data = data.T
+
+        # Keep only the 'ttm' row to focus on the processed values
         data = data[data.index == "ttm"]
 
-        # Filter and rename columns based on the income statement filter
-        filtered_columns = [
-            col for col in data.columns if col in self.filters[balance_type]
-        ]
+        # Filter columns to include only those specified in self.filters[balance_type]
+        filtered_columns = [col for col in data.columns if col in self.filters[balance_type]]
         data = data[filtered_columns].rename(columns=self.filters[balance_type])
 
-        # Convert DataFrame to a list of tuples and add 'year' as the first column
+        # Convert the cleaned DataFrame to a list of tuples
         processed_data = self.dataframe_to_tuples(data)
+
+        # Create column headers, adding 'year' as the first column
         columns = tuple(["year"] + list(data.columns))
 
-        # Add header and return the final data
+        # Return the final structured data with headers
         return [columns] + processed_data
 
     def process_dividends(self, data):
+        """
+        Processes raw dividend data by aggregating it yearly and formatting it.
 
+        :param data: A pandas Series with dates as the index and dividends as values.
+        :return: A list of tuples containing processed dividend data, including headers.
+        """
+
+        # Group the data by year and sum the dividends for each year
         data = data.groupby(data.index.year).sum()
 
-        # Transformando a série em lista de tuplas
+        # Convert the Series into a list of tuples (year, total dividends)
         modified_data = [(index, value) for index, value in data.items()]
 
+        # Define column headers
         columns = [("year", "dividends")]
 
+        # Return the headers followed by the processed dividend data
         return columns + modified_data
+    
+    def earnings_estimate(self, data, years):
+        """
+        Processes raw dividend data by aggregating it yearly and formatting it.
+
+        :param data: A pandas Series with dates as the index and dividends as values.
+        :return: A list of tuples containing processed dividend data, including headers.
+        """
+        
+        # Define years
+        current_year = years[0]
+        next_year = years[1]
+
+        list_data = [(
+            current_year,
+            float(data.loc['0y', 'avg'])),
+            (next_year,
+            float(data.loc['+1y', 'avg']))
+            ]
+
+        # Return the headers followed by the processed dividend data
+        return [('year', 'eps')] + list_data
+
+    def payout_estimate(self, data, years):
+        """
+        Processes raw dividend data by aggregating it yearly and formatting it.
+
+        :param data: A pandas Series with dates as the index and dividends as values.
+        :return: A list of tuples containing processed dividend data, including headers.
+        """
+        
+        # define years
+        current_year = years[0]
+        next_year = years[1]
+
+        list_data = [(
+            current_year,
+            float(data.loc['0y', 'avg'])),
+            (next_year,
+            float(data.loc['+1y', 'avg']))
+            ]
+
+        # Return the headers followed by the processed dividend data
+        return [('year', 'eps')] + list_data  
+
+    def estimated_years(self, years):
+        filtered_years = [year for year in years if year != 'ttm']
+        max_year = max(filtered_years)
+        current_year = int(max_year) + 1
+        next_year = current_year + 1
+        return [current_year, next_year]
+
 
     # -----------------------  Setup methods ---------------------------------------
 
@@ -187,6 +256,7 @@ class DataHandler:
             return {}
 
 
+
 # ------------------- TEST ---------------------------------------------------------
 if __name__ == "__main__":
     path = Path("data/files.json")  # ------------------------------------------------
@@ -201,65 +271,74 @@ if __name__ == "__main__":
         collector = YFinanceCollector(ticker)
         finder = SQLFinder(db)
 
-        raw_data = collector.fetch_company_profile()  # Coletando dados
-        proc_data = handler.dict_to_tuples(raw_data)  # Processando dados
-        db.insert_data(
-            "profile", proc_data[0], proc_data[1:]
-        )  # Armazenando dados no banco de dados
+        # raw_data = collector.fetch_company_profile()  # Coletando dados
+        # proc_data = handler.dict_to_tuples(raw_data)  # Processando dados
+        # db.insert_data(
+        #     "profile", proc_data[0], proc_data[1:]
+        # )  # Armazenando dados no banco de dados
 
         profile_id = db.fetch_profile_id(ticker)  # coletando o profile_id
 
-        raw_data = collector.fetch_stock_prices()  # Coletando dados
-        proc_data = handler.process_stock_prices(raw_data)  # Processando dados
-        proc_data = handler.add_profile_id(profile_id, proc_data)
-        print(proc_data[:3])
-        db.insert_data(
-            "quotes", proc_data[0], proc_data[1:]
-        )  # Armazenando dados no banco de dados
+        # raw_data = collector.fetch_stock_prices()  # Coletando dados
+        # proc_data = handler.process_stock_prices(raw_data)  # Processando dados
+        # proc_data = handler.add_profile_id(profile_id, proc_data)
+        # print(proc_data[:3])
+        # db.insert_data(
+        #     "quotes", proc_data[0], proc_data[1:]
+        # )  # Armazenando dados no banco de dados
 
-        balance_types = ["income_stmt", "balance_sheet", "cash_flow"]
-        for balance_type in balance_types:
-            raw_data = collector.fetch_data(balance_type)  # Coletando dados
-            proc_data = handler.process_balance(
-                balance_type, raw_data
-            )  # Processando dados
-            proc_data = handler.add_profile_id(profile_id, proc_data)
-            print(proc_data[:3])
-            db.insert_data(
-                balance_type, proc_data[0], proc_data[1:]
-            )  # Armazenando dados no banco de dados
+        # balance_types = ["income_stmt", "balance_sheet", "cash_flow"]
+        # for balance_type in balance_types:
+        #     raw_data = collector.fetch_data(balance_type)  # Coletando dados
+        #     proc_data = handler.process_balance(
+        #         balance_type, raw_data
+        #     )  # Processando dados
+        #     proc_data = handler.add_profile_id(profile_id, proc_data)
+        #     print(proc_data[:3])
+        #     db.insert_data(
+        #         balance_type, proc_data[0], proc_data[1:]
+        #     )  # Armazenando dados no banco de dados
 
-            # ------------ TTM ------------------------
+        #     # ------------ TTM ------------------------
 
-            quarterly_balance = "quarterly_" + balance_type
-            raw_data = collector.fetch_data(quarterly_balance)  # Coletando dados
-            proc_data = handler.process_balance_ttm(
-                balance_type, raw_data
-            )  # Processando dados
-            proc_data = handler.add_profile_id(profile_id, proc_data)
-            print(proc_data[:3])
-            db.update_data(
-                balance_type, proc_data[0], proc_data[1:]
-            )  # Armazenando dados no banco de dados
+        #     quarterly_balance = "quarterly_" + balance_type
+        #     raw_data = collector.fetch_data(quarterly_balance)  # Coletando dados
+        #     proc_data = handler.process_balance_ttm(
+        #         balance_type, raw_data
+        #     )  # Processando dados
+        #     proc_data = handler.add_profile_id(profile_id, proc_data)
+        #     print(proc_data[:3])
+        #     db.update_data(
+        #         balance_type, proc_data[0], proc_data[1:]
+        #     )  # Armazenando dados no banco de dados
 
-        raw_data = collector.fetch_data("dividends")
-        proc_data = handler.process_dividends(raw_data)
-        proc_data = handler.add_profile_id(profile_id, proc_data)
-        print(proc_data[:3])
-        db.update_data(
-            "ests", proc_data[0], proc_data[1:]
-        )  # Armazenando dados no banco de dados
+        # raw_data = collector.fetch_data("dividends")
+        # proc_data = handler.process_dividends(raw_data)
+        # proc_data = handler.add_profile_id(profile_id, proc_data)
+        # print(proc_data[:3])
+        # db.update_data(
+        #     "ests", proc_data[0], proc_data[1:]
+        # )  # Armazenando dados no banco de dados
 
-        raw_data = finder.fetch_roe(profile_id)
-        proc_data = [("profile_id", "year", "roe")] + raw_data
+        # raw_data = finder.fetch_roe(profile_id)
+        # print(raw_data)
+
+        # finder.fetch_eps(profile_id)
+
+        # finder.fetch_payout(profile_id)
+
+        raw_data = collector.fetch_data("earnings_estimate")
+        years = db.query_table("income_stmt", 'year')
+        estimated_years = handler.estimated_years(years)
+        # raw_data = handler.earnings_estimate(raw_data, estimate_years)
+        # proc_data = handler.add_profile_id(profile_id, raw_data)
+        # db.update_data(
+        #     "ests", proc_data[0], proc_data[1:]
+        # )  # Armazenando dados no banco de dados
+
+        proc_data = finder.payout_estimate(profile_id, estimated_years[0])
+        proc_data = finder.payout_estimate2(profile_id, estimated_years)
+        proc_data = finder.dividends_estimate(profile_id, estimated_years)
+
         print(proc_data)
-        db.update_data(
-            "ests", proc_data[0], proc_data[1:]
-        )  # Armazenando dados no banco de dados
 
-        raw_data = finder.fetch_eps(profile_id)
-        proc_data = [("profile_id", "year", "eps")] + raw_data
-        print(proc_data)
-        db.update_data(
-            "ests", proc_data[0], proc_data[1:]
-        )  # Armazenando dados no banco de dados

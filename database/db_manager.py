@@ -61,7 +61,7 @@ class DatabaseManager:
                 [f"{column} {type}" for column, type in columns.items()]
             )
             query = f"CREATE TABLE {table_name} ({columns_sql});"
-            self._execute_query(query)
+            self.cursor.execute(query)
         except Exception as e:
             logging.error(f"Error creating table {table_name}: {e}")
 
@@ -72,7 +72,7 @@ class DatabaseManager:
 
         try:
             query = f"DROP TABLE {table_name};"
-            self._execute_query(query)
+            self.cursor.execute(query)
         except Exception as e:
             logging.error(f"Error deleting table {table_name}: {e}")
 
@@ -137,7 +137,7 @@ class DatabaseManager:
 
         try:
             query = f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_type};"
-            self._execute_query(query)
+            self.cursor.execute(query)
         except Exception as e:
             logging.error(
                 f"Error adding column {column_name} to table {table_name}: {e}"
@@ -145,11 +145,25 @@ class DatabaseManager:
 
     def list_tables(self):
         query = "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;"
-        return [t[0] for t in self._execute_query(query)]
+        return [t[0] for t in self._fetch_all(query)]
 
     def query_table(self, table, column):
+        """
+        Returns a list of unique (DISTINCT) values from the specified column in a table.
+
+        Parameters:
+            table (str): The name of the table to query.
+            column (str): The name of the column whose distinct values will be returned.
+
+        Returns:
+            list: A list of unique values from the specified column, sorted in ascending order.
+        """
+        # Construct the SQL query to select distinct values from the column and sort them
         query = f"SELECT DISTINCT {column} FROM {table} ORDER BY {column};"
-        return [t[0] for t in self._execute_query(query)]
+
+        # Execute the query and return a list containing only the column values
+        return [t[0] for t in self._fetch_all(query)]
+
 
     def insert_data(self, table, columns, data):
         """Generic function to insert data into any table in the database."""
@@ -226,8 +240,30 @@ class DatabaseManager:
         self.conn.rollback()  # Rollback is supported by the connection
 
     # -----------------------  Setup methods ---------------------------------------
+    def _fetch_one(self, query, params=None):
+        """Executes an SQL query in the database.
 
-    def _execute_query(self, query, params=None):
+        This method executes a query in the database. It can be used for any type
+        of operation (SELECT, INSERT, etc.).
+
+        Parameters:
+            query (str): The SQL query to be executed.
+            params (tuple or list, optional): Parameters to be passed to the query.
+        """
+        try:
+            if params:
+                self.cursor.execute(query, params)  # Executes the query with parameters
+            else:
+                self.cursor.execute(query)  # Executes the query without parameters
+
+            # Returns the number of affected rows.
+            return self.cursor.fetchone()
+
+        except sqlite3.Error as e:
+            logging.error(f"Error executing query: {e}")
+            raise  # Raises the exception to be handled by the calling code
+
+    def _fetch_all(self, query, params=None):
         """Executes an SQL query in the database.
 
         This method executes a query in the database. It can be used for any type
