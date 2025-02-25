@@ -145,7 +145,7 @@ class DatabaseManager:
 
     def list_tables(self):
         query = "SELECT name FROM sqlite_master WHERE type='table' ORDER BY name;"
-        return [t[0] for t in self._fetch_all(query)]
+        return [t[0] for t in self.cursor.execute(query).fetchall()]
 
     def query_table(self, table, column):
         """
@@ -162,8 +162,7 @@ class DatabaseManager:
         query = f"SELECT DISTINCT {column} FROM {table} ORDER BY {column};"
 
         # Execute the query and return a list containing only the column values
-        return [t[0] for t in self._fetch_all(query)]
-
+        return [t[0] for t in self.cursor.execute(query).fetchall()]
 
     def insert_data(self, table, columns, data):
         """Generic function to insert data into any table in the database."""
@@ -203,7 +202,7 @@ class DatabaseManager:
         except sqlite3.Error as e:
             print(f"Error inserting data into table {table}: {e}")
 
-    def fetch_data(self, table, **filters):
+    def get_data(self, table, **filters):
         """
         Retrieves data from any database table based on provided filters.
 
@@ -240,52 +239,6 @@ class DatabaseManager:
         self.conn.rollback()  # Rollback is supported by the connection
 
     # -----------------------  Setup methods ---------------------------------------
-    def _fetch_one(self, query, params=None):
-        """Executes an SQL query in the database.
-
-        This method executes a query in the database. It can be used for any type
-        of operation (SELECT, INSERT, etc.).
-
-        Parameters:
-            query (str): The SQL query to be executed.
-            params (tuple or list, optional): Parameters to be passed to the query.
-        """
-        try:
-            if params:
-                self.cursor.execute(query, params)  # Executes the query with parameters
-            else:
-                self.cursor.execute(query)  # Executes the query without parameters
-
-            # Returns the number of affected rows.
-            return self.cursor.fetchone()
-
-        except sqlite3.Error as e:
-            logging.error(f"Error executing query: {e}")
-            raise  # Raises the exception to be handled by the calling code
-
-    def _fetch_all(self, query, params=None):
-        """Executes an SQL query in the database.
-
-        This method executes a query in the database. It can be used for any type
-        of operation (SELECT, INSERT, etc.).
-
-        Parameters:
-            query (str): The SQL query to be executed.
-            params (tuple or list, optional): Parameters to be passed to the query.
-        """
-        try:
-            if params:
-                self.cursor.execute(query, params)  # Executes the query with parameters
-            else:
-                self.cursor.execute(query)  # Executes the query without parameters
-
-            # Returns the number of affected rows.
-            return self.cursor.fetchall()
-
-        except sqlite3.Error as e:
-            logging.error(f"Error executing query: {e}")
-            raise  # Raises the exception to be handled by the calling code
-
     def __enter__(self):
         self.connect()
         return self  # Returns the instance to be used within the 'with' block

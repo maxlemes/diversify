@@ -1,7 +1,7 @@
+import datetime as dt
 import json
 import logging
 from pathlib import Path
-import datetime as dt
 
 import pandas as pd
 
@@ -126,7 +126,9 @@ class DataHandler:
         data = data[data.index == "ttm"]
 
         # Filter columns to include only those specified in self.filters[balance_type]
-        filtered_columns = [col for col in data.columns if col in self.filters[balance_type]]
+        filtered_columns = [
+            col for col in data.columns if col in self.filters[balance_type]
+        ]
         data = data[filtered_columns].rename(columns=self.filters[balance_type])
 
         # Convert the cleaned DataFrame to a list of tuples
@@ -157,28 +159,26 @@ class DataHandler:
 
         # Return the headers followed by the processed dividend data
         return columns + modified_data
-    
-    def earnings_estimate(self, data, years):
+
+    def estimated_eps(self, data, years):
         """
         Processes raw dividend data by aggregating it yearly and formatting it.
 
         :param data: A pandas Series with dates as the index and dividends as values.
         :return: A list of tuples containing processed dividend data, including headers.
         """
-        
+
         # Define years
         current_year = years[0]
         next_year = years[1]
 
-        list_data = [(
-            current_year,
-            float(data.loc['0y', 'avg'])),
-            (next_year,
-            float(data.loc['+1y', 'avg']))
-            ]
+        list_data = [
+            (current_year, float(data.loc["0y", "avg"])),
+            (next_year, float(data.loc["+1y", "avg"])),
+        ]
 
         # Return the headers followed by the processed dividend data
-        return [('year', 'eps')] + list_data
+        return [("year", "eps")] + list_data
 
     def payout_estimate(self, data, years):
         """
@@ -187,28 +187,25 @@ class DataHandler:
         :param data: A pandas Series with dates as the index and dividends as values.
         :return: A list of tuples containing processed dividend data, including headers.
         """
-        
+
         # define years
         current_year = years[0]
         next_year = years[1]
 
-        list_data = [(
-            current_year,
-            float(data.loc['0y', 'avg'])),
-            (next_year,
-            float(data.loc['+1y', 'avg']))
-            ]
+        list_data = [
+            (current_year, float(data.loc["0y", "avg"])),
+            (next_year, float(data.loc["+1y", "avg"])),
+        ]
 
         # Return the headers followed by the processed dividend data
-        return [('year', 'eps')] + list_data  
+        return [("year", "eps")] + list_data
 
     def estimated_years(self, years):
-        filtered_years = [year for year in years if year != 'ttm']
+        filtered_years = [year for year in years if year != "ttm"]
         max_year = max(filtered_years)
         current_year = int(max_year) + 1
         next_year = current_year + 1
         return [current_year, next_year]
-
 
     # -----------------------  Setup methods ---------------------------------------
 
@@ -254,7 +251,6 @@ class DataHandler:
         except Exception as e:
             logging.error(f"Error loading filters from filters.json: {e}")
             return {}
-
 
 
 # ------------------- TEST ---------------------------------------------------------
@@ -320,25 +316,36 @@ if __name__ == "__main__":
         #     "ests", proc_data[0], proc_data[1:]
         # )  # Armazenando dados no banco de dados
 
-        # raw_data = finder.fetch_roe(profile_id)
+        # add roe to 'ests'
+        raw_data = finder.fetch_roe(profile_id)
         # print(raw_data)
 
-        # finder.fetch_eps(profile_id)
+        # add eps to 'ests'
+        raw_data = finder.fetch_eps(profile_id)
+        # print(raw_data)
 
-        # finder.fetch_payout(profile_id)
+        # add payout to 'ests'
+        finder.fetch_payout(profile_id)
+        # print(raw_data)
 
+        # add estimated eps to 'ests'
         raw_data = collector.fetch_data("earnings_estimate")
-        years = db.query_table("income_stmt", 'year')
+        years = db.query_table("income_stmt", "year")
         estimated_years = handler.estimated_years(years)
-        # raw_data = handler.earnings_estimate(raw_data, estimate_years)
-        # proc_data = handler.add_profile_id(profile_id, raw_data)
-        # db.update_data(
-        #     "ests", proc_data[0], proc_data[1:]
-        # )  # Armazenando dados no banco de dados
+        raw_data = handler.estimated_eps(raw_data, estimated_years)
+        proc_data = handler.add_profile_id(profile_id, raw_data)
+        db.update_data("ests", proc_data[0], proc_data[1:])
 
-        proc_data = finder.payout_estimate(profile_id, estimated_years[0])
-        proc_data = finder.payout_estimate2(profile_id, estimated_years)
-        proc_data = finder.dividends_estimate(profile_id, estimated_years)
+        # add current_payout
+        current_year = estimated_years[0]
+        proc_data = finder.current_payout(profile_id, current_year)
 
-        print(proc_data)
+        # add estimated_payout
+        next_year = estimated_years[1]
+        proc_data = finder.estimated_payout(profile_id, next_year)
 
+        # add estimated_dividends
+        next_year = estimated_years[1]
+        proc_data = finder.estimated_dividends(profile_id, next_year)
+
+        # print(proc_data)

@@ -43,33 +43,19 @@ class SQLFinder:
 
             # Execute the query and get the result
             self.db.cursor.execute(query_roe, (profile_id,))
-            result = self.db.cursor.fetchall()
+            results = self.db.cursor.fetchall()
 
-            # Check if result is empty and log it
-            if not result:
-                logging.warning(f"No ROE data found for profile_id {profile_id}.")
-                return []
+            columns = ("profile_id", "year", "roe")
+            self.db.update_data("ests", columns, results)
 
-            # Insert the results into the 'ests' table
-            insert_query = """
-            INSERT INTO ests (profile_id, year, roe) 
-            VALUES (?, ?, ?)
-            ON CONFLICT(profile_id, year) DO UPDATE SET roe = excluded.roe;
-            """
-            
-            # Use executemany to insert all results into the table
-            self.db.cursor.executemany(insert_query, result)
-
-            # Commit the transaction after insertion
-            self.db.cursor.connection.commit()
-
-            return result
+            return results
 
         except Exception as e:
-            logging.error(f"Error fetching and storing ROE for profile_id {profile_id}: {e}")
+            logging.error(
+                f"Error fetching and storing ROE for profile_id {profile_id}: {e}"
+            )
             return []
 
-    
     import logging
 
     def fetch_eps(self, profile_id):
@@ -87,7 +73,7 @@ class SQLFinder:
             # Query to fetch EPS based on profile_id
             query_eps = """
             SELECT 
-                income_stmt.profile_id,  -- Fetch profile ID from the income statement
+                income_stmt.profile_id,   -- Fetch profile ID from the income statement
                 income_stmt.year,         -- Fetch year from the income statement
                 (income_stmt.net_income / NULLIF(balance_sheet.ordinary_shares, 0)) AS eps
                 -- Calculate EPS by dividing net income by ordinary shares (avoid division by 0 with NULLIF)
@@ -104,31 +90,17 @@ class SQLFinder:
             self.db.cursor.execute(query_eps, (profile_id,))
             result = self.db.cursor.fetchall()
 
-            # Check if result is empty, log a warning if no data is found
-            if not result:
-                logging.warning(f"No EPS data found for profile_id {profile_id}.")
-                return []
-
-            # Insert the results into the 'ests' table
-            insert_query = """
-            INSERT INTO ests (profile_id, year, eps) 
-            VALUES (?, ?, ?)
-            ON CONFLICT(profile_id, year) 
-            DO UPDATE SET eps = excluded.eps;
-            """
-            
-            # Use executemany to insert all results into the table
-            self.db.cursor.executemany(insert_query, result)
-
-            # Commit the transaction after insertion
-            self.db.cursor.connection.commit()
+            columns = ("profile_id", "year", "eps")
+            self.db.update_data("ests", columns, result)
 
             # Return the result (list of tuples)
             return result
 
         except Exception as e:
             # Log the error with the profile_id for better debugging
-            logging.error(f"Error calculating and storing EPS for profile_id {profile_id}: {e}")
+            logging.error(
+                f"Error calculating and storing EPS for profile_id {profile_id}: {e}"
+            )
             # Return an empty list in case of error
             return []
 
@@ -152,7 +124,7 @@ class SQLFinder:
             # Query to fetch Dividends Paid and Net Income for calculating the payout ratio
             query_payout = """
             SELECT 
-                income_stmt.profile_id,  -- Fetch profile ID from the income statement
+                income_stmt.profile_id,   -- Fetch profile ID from the income statement
                 income_stmt.year,         -- Fetch year from the income statement
                 (-cash_flow.dividends_paid / NULLIF(income_stmt.net_income, 0)) AS payout
                 -- Calculate payout ratio: -dividends_paid / net_income (avoid division by 0 with NULLIF)
@@ -171,35 +143,21 @@ class SQLFinder:
             self.db.cursor.execute(query_payout, (profile_id,))
             result = self.db.cursor.fetchall()
 
-            # Check if result is empty, log a warning if no data is found
-            if not result:
-                logging.warning(f"No Payout data found for profile_id {profile_id}.")
-                return []
-
-            # Insert the results into the 'ests' table
-            insert_query = """
-            INSERT INTO ests (profile_id, year, payout) 
-            VALUES (?, ?, ?)
-            ON CONFLICT(profile_id, year) 
-            DO UPDATE SET payout = excluded.payout;
-            """
-            
-            # Execute the insert query to store the results
-            self.db.cursor.executemany(insert_query, result)
-
-            # Commit the transaction after insertion
-            self.db.cursor.connection.commit()
+            columns = ("profile_id", "year", "payout")
+            self.db.update_data("ests", columns, result)
 
             # Return the result (list of tuples)
             return result
 
         except Exception as e:
             # Log the error with the profile_id for better debugging
-            logging.error(f"Error calculating and storing Payout for profile_id {profile_id}: {e}")
+            logging.error(
+                f"Error calculating and storing Payout for profile_id {profile_id}: {e}"
+            )
             # Return an empty list in case of error
             return []
 
-    def payout_estimate(self, profile_id, year):
+    def current_payout(self, profile_id, current_year):
         """
         Estimates the payout for a specific profile_id using the formula: payout = dividends / eps
         for the given year, and stores the result in the 'ests' table.
@@ -220,9 +178,7 @@ class SQLFinder:
             """
 
             # Execute the query with the profile_id and year as parameters
-            self.db.cursor.execute(query, (profile_id, year))
-
-            # Fetch the result from the query
+            self.db.cursor.execute(query, (profile_id, current_year))
             result = self.db.cursor.fetchone()
 
             # Calculate the payout if data is available
@@ -233,32 +189,30 @@ class SQLFinder:
                 if dividends is not None and eps is not None and eps != 0:
                     payout = dividends / eps
 
-                    # Store the calculated payout in the 'ests' table
-                    update_query = """
-                    INSERT INTO ests (profile_id, year, payout)
-                    VALUES (?, ?, ?)
-                    ON CONFLICT(profile_id, year) DO UPDATE SET payout = excluded.payout;
-                    """
-                    self.db.cursor.execute(update_query, (profile_id, year, payout))
+                    columns = ("profile_id", "year", "payout")
+                    values = [(profile_id, year, payout)]
 
-                    # Commit the changes to the database
-                    self.db.commit()
+                    self.db.update_data("ests", columns, values)
 
-                    return (year, payout)
+                    return values
                 else:
                     # If data is invalid (None or zero eps), set payout to None
-                    return (year, None)
+                    return result
             else:
-                logging.warning(f"No data found for profile_id {profile_id} and year {year}.")
-                return (year, None)
+                logging.warning(
+                    f"No data found for profile_id {profile_id} and year {year}."
+                )
+                return result
 
         except Exception as e:
-            logging.error(f"Error calculating and storing payout estimate for profile_id {profile_id} and year {year}: {e}")
+            logging.error(
+                f"Error calculating and storing payout estimate for profile_id {profile_id} and year {year}: {e}"
+            )
             return (year, None)
 
-    def payout_estimate2(self, profile_id, years):
+    def estimated_payout(self, profile_id, next_year):
         """
-        Calculates the average payout for the 5 years before and including years[0], 
+        Calculates the average payout for the 5 years before and including years[0],
         and stores the result in the year specified by next_year.
 
         Parameters:
@@ -271,9 +225,9 @@ class SQLFinder:
         """
         try:
             # Fetch the 5 years of payout data from the 'ests' table
-            start_year = int(years[0]) - 4  # Calculate the start year (5 years before years[0])
-            end_year = int(years[0])  # The last year is years[0]
-            next_year = years[1]
+            start_year = int(next_year) - 5  # Calculate the start year (5 years before)
+            end_year = int(next_year) - 1  # The last year is years[
+
             query = """
             SELECT payout
             FROM ests
@@ -287,41 +241,42 @@ class SQLFinder:
             # Calculate the average payout if data is available
             if results:
                 payouts = [result[0] for result in results if result[0] is not None]
-                
+
                 if payouts:
                     average_payout = sum(payouts) / len(payouts)
-                    
-                    # Store the average payout in the 'ests' table for the year next_year
-                    update_query = """
-                    INSERT INTO ests (profile_id, year, payout)
-                    VALUES (?, ?, ?)
-                    ON CONFLICT(profile_id, year) DO UPDATE SET payout = excluded.payout;
-                    """
-                    self.db.cursor.execute(update_query, (profile_id, next_year, average_payout))
 
-                    # Commit the changes to the database
-                    self.db.commit()
+                    columns = ("profile_id", "year", "payout")
+                    values = [(profile_id, next_year, average_payout)]
 
-                    return (next_year, average_payout)
+                    self.db.update_data("ests", columns, values)
+
+                    return values
+
                 else:
-                    logging.warning(f"No valid payouts found for profile_id {profile_id} from {start_year} to {end_year}.")
+                    logging.warning(
+                        f"No valid payouts found for profile_id {profile_id} from {start_year} to {end_year}."
+                    )
                     return (next_year, None)
             else:
-                logging.warning(f"No payout data found for profile_id {profile_id} in the years {start_year}-{end_year}.")
+                logging.warning(
+                    f"No payout data found for profile_id {profile_id} in the years {start_year}-{end_year}."
+                )
                 return (next_year, None)
 
         except Exception as e:
-            logging.error(f"Error calculating and storing payout estimate for profile_id {profile_id} and years {years[0]}-{next_year}: {e}")
+            logging.error(
+                f"Error calculating and storing payout estimate for profile_id {profile_id} and years {years[0]}-{next_year}: {e}"
+            )
             return (next_year, None)
 
-    def dividends_estimate(self, profile_id, years):
+    def estimated_dividends(self, profile_id, next_year):
         """
-        Calculates the dividends for the 'ttm' year and the specified year in next_year, 
+        Calculates the dividends for the 'ttm' year and the specified year in next_year,
         and stores the results in the 'ests' table.
 
         Parameters:
             profile_id (int): The ID of the profile for which to calculate dividends.
-            years (list): A list containing two years, where years[0] is the last year to calculate the dividends 
+            years (list): A list containing two years, where years[0] is the last year to calculate the dividends
                         and next_year is the year to store the calculated dividends.
 
         Returns:
@@ -334,53 +289,49 @@ class SQLFinder:
             FROM ests
             WHERE profile_id = ? AND year IN ('ttm', ?)
             """
-            next_year = str(years[1])
+
+            next_year = str(next_year)
             # Execute the query
             self.db.cursor.execute(query, (profile_id, next_year))
             results = self.db.cursor.fetchall()
-            print(results)
 
             # Check if we have results for 'ttm' and next_year
             if len(results) < 2:
-                logging.warning(f"Not enough data found for profile_id {profile_id} in 'ttm' and year {next_year}.")
+                logging.warning(
+                    f"Not enough data found for profile_id {profile_id} in 'ttm' and year {next_year}."
+                )
                 return (next_year, None)
 
             # Create a dictionary for the results for easy access
-            data = {result[0]: {'payout': result[1], 'eps': result[2]} for result in results}
-            
+            data = {
+                result[0]: {"payout": result[1], "eps": result[2]} for result in results
+            }
+
             # Calculate dividends for 'ttm' and next_year
-            dividends_ttm = data['ttm']['payout'] * data['ttm']['eps'] if data['ttm']['payout'] and data['ttm']['eps'] else None
-            dividends_year = data[next_year]['payout'] * data[next_year]['eps'] if data[next_year]['payout'] and data[next_year]['eps'] else None
-            print(dividends_ttm)
-            print(dividends_year)
-            # Store the dividends back into the 'ests' table
-            insert_query = """
-            INSERT INTO ests (profile_id, year, dividends)
-            VALUES (?, ?, ?)
-            ON CONFLICT(profile_id, year) DO UPDATE SET dividends = excluded.dividends;
-            """
+            dividends_ttm = (
+                data["ttm"]["payout"] * data["ttm"]["eps"]
+                if data["ttm"]["payout"] and data["ttm"]["eps"]
+                else None
+            )
+            dividends_year = (
+                data[next_year]["payout"] * data[next_year]["eps"]
+                if data[next_year]["payout"] and data[next_year]["eps"]
+                else None
+            )
 
-            # Insert for 'ttm'
-            if dividends_ttm is not None:
-                self.db.cursor.execute(insert_query, (profile_id, 'ttm', dividends_ttm))
+            columns = ("profile_id", "year", "dividends")
 
-            # Insert for next_year
-            if dividends_year is not None:
-                self.db.cursor.execute(insert_query, (profile_id, next_year, dividends_year))
+            values = [(profile_id, next_year, dividends_year)]
+            values = [(profile_id, "ttm", dividends_ttm)] + values
 
-            # Commit the changes to the database
-            self.db.commit()
+            self.db.update_data("ests", columns, values)
 
-            return (next_year, dividends_year)
+            return values
 
         except Exception as e:
-            logging.error(f"Error calculating and storing dividends estimate for profile_id {profile_id} and years {years[0]}-{years[1]}: {e}")
+            logging.error(
+                f"Error calculating and storing dividends estimate for profile_id {profile_id} and years {years[0]}-{years[1]}: {e}"
+            )
             return (next_year, None)
-
-
-
-
-
-
 
         # -----------------------  Display methods -------------------------------------
