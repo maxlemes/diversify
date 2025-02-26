@@ -6,14 +6,14 @@ from pathlib import Path
 import pandas as pd
 
 from database.db_manager import DatabaseManager
-from y_finance.sql_finder import SQLFinder
-from y_finance.yfinance_collector import YFinanceCollector
+from etl.extractor import Extractor
+from etl.loader import SQLLoader
 
 
-class DataHandler:
+class Transformer:
     def __init__(self, db_manager):
         """
-        Initializes the DataHandler with a database connection.
+        Initializes the Transformer with a database connection.
 
         :param db_connection: Database connection object.
         """
@@ -255,97 +255,102 @@ class DataHandler:
 
 # ------------------- TEST ---------------------------------------------------------
 if __name__ == "__main__":
-    path = Path("data/files.json")  # ------------------------------------------------
+
+    path = Path("data/files.json")  # ----------------------------------------------
     # Load the JSON file containing paths to the database and tables
     with open(path, "r") as f:
         files = json.load(f)
     # Define paths for the database and tables
     db_path = Path(files["database"])
-    with DatabaseManager(db_path) as db:
-        handler = DataHandler(db)
-        ticker = "WEGE3"
-        collector = YFinanceCollector(ticker)
-        finder = SQLFinder(db)
 
-        # raw_data = collector.fetch_company_profile()  # Coletando dados
-        # proc_data = handler.dict_to_tuples(raw_data)  # Processando dados
-        # db.insert_data(
-        #     "profile", proc_data[0], proc_data[1:]
-        # )  # Armazenando dados no banco de dados
+    with DatabaseManager(db_path) as db:
+        transformer = Transformer(db)
+        ticker = "WEGE3"
+        extractor = Extractor(ticker)
+        loader = SQLLoader(db)
+
+        # add perfil to database
+        raw_data = extractor.fetch_company_profile()
+        proc_data = transformer.dict_to_tuples(raw_data)
+        db.insert_data("profile", proc_data[0], proc_data[1:])
 
         profile_id = db.fetch_profile_id(ticker)  # coletando o profile_id
 
-        # raw_data = collector.fetch_stock_prices()  # Coletando dados
-        # proc_data = handler.process_stock_prices(raw_data)  # Processando dados
-        # proc_data = handler.add_profile_id(profile_id, proc_data)
-        # print(proc_data[:3])
-        # db.insert_data(
-        #     "quotes", proc_data[0], proc_data[1:]
-        # )  # Armazenando dados no banco de dados
+        # add quotes to database
+        raw_data = extractor.fetch_stock_prices()  # Coletando dados
+        proc_data = transformer.process_stock_prices(raw_data)  # Processando dados
+        proc_data = transformer.add_profile_id(profile_id, proc_data)
+        print(proc_data[:3])
+        db.insert_data(
+            "quotes", proc_data[0], proc_data[1:]
+        )  # Armazenando dados no banco de dados
 
-        # balance_types = ["income_stmt", "balance_sheet", "cash_flow"]
-        # for balance_type in balance_types:
-        #     raw_data = collector.fetch_data(balance_type)  # Coletando dados
-        #     proc_data = handler.process_balance(
-        #         balance_type, raw_data
-        #     )  # Processando dados
-        #     proc_data = handler.add_profile_id(profile_id, proc_data)
-        #     print(proc_data[:3])
-        #     db.insert_data(
-        #         balance_type, proc_data[0], proc_data[1:]
-        #     )  # Armazenando dados no banco de dados
+        # add balances to database
+        balance_types = ["income_stmt", "balance_sheet", "cash_flow"]
+        for balance_type in balance_types:
 
-        #     # ------------ TTM ------------------------
+            # ------------ YEARLY ------------------------
+            raw_data = extractor.fetch_data(balance_type)  # Coletando dados
+            proc_data = transformer.process_balance(
+                balance_type, raw_data
+            )  # Processando dados
+            proc_data = transformer.add_profile_id(profile_id, proc_data)
+            print(proc_data[:3])
+            db.insert_data(
+                balance_type, proc_data[0], proc_data[1:]
+            )  # Armazenando dados no banco de dados
 
-        #     quarterly_balance = "quarterly_" + balance_type
-        #     raw_data = collector.fetch_data(quarterly_balance)  # Coletando dados
-        #     proc_data = handler.process_balance_ttm(
-        #         balance_type, raw_data
-        #     )  # Processando dados
-        #     proc_data = handler.add_profile_id(profile_id, proc_data)
-        #     print(proc_data[:3])
-        #     db.update_data(
-        #         balance_type, proc_data[0], proc_data[1:]
-        #     )  # Armazenando dados no banco de dados
+            # ------------ TTM ------------------------
+            quarterly_balance = "quarterly_" + balance_type
+            raw_data = extractor.fetch_data(quarterly_balance)  # Coletando dados
+            proc_data = transformer.process_balance_ttm(
+                balance_type, raw_data
+            )  # Processando dados
+            proc_data = transformer.add_profile_id(profile_id, proc_data)
+            print(proc_data[:3])
+            db.update_data(
+                balance_type, proc_data[0], proc_data[1:]
+            )  # Armazenando dados no banco de dados
 
-        # raw_data = collector.fetch_data("dividends")
-        # proc_data = handler.process_dividends(raw_data)
-        # proc_data = handler.add_profile_id(profile_id, proc_data)
-        # print(proc_data[:3])
-        # db.update_data(
-        #     "ests", proc_data[0], proc_data[1:]
-        # )  # Armazenando dados no banco de dados
+        # add dividends to database
+        raw_data = extractor.fetch_data("dividends")
+        proc_data = transformer.process_dividends(raw_data)
+        proc_data = transformer.add_profile_id(profile_id, proc_data)
+        print(proc_data[:3])
+        db.update_data(
+            "ests", proc_data[0], proc_data[1:]
+        )  # Armazenando dados no banco de dados
 
-        # add roe to 'ests'
-        raw_data = finder.fetch_roe(profile_id)
+        # add roe to database
+        raw_data = loader.fetch_roe(profile_id)
         # print(raw_data)
 
-        # add eps to 'ests'
-        raw_data = finder.fetch_eps(profile_id)
+        # add eps to database
+        raw_data = loader.fetch_eps(profile_id)
         # print(raw_data)
 
-        # add payout to 'ests'
-        finder.fetch_payout(profile_id)
+        # add payout to database
+        loader.fetch_payout(profile_id)
         # print(raw_data)
 
-        # add estimated eps to 'ests'
-        raw_data = collector.fetch_data("earnings_estimate")
+        # add estimated eps to database
+        raw_data = extractor.fetch_data("earnings_estimate")
         years = db.query_table("income_stmt", "year")
-        estimated_years = handler.estimated_years(years)
-        raw_data = handler.estimated_eps(raw_data, estimated_years)
-        proc_data = handler.add_profile_id(profile_id, raw_data)
+        estimated_years = transformer.estimated_years(years)
+        raw_data = transformer.estimated_eps(raw_data, estimated_years)
+        proc_data = transformer.add_profile_id(profile_id, raw_data)
         db.update_data("ests", proc_data[0], proc_data[1:])
 
-        # add current_payout
+        # add current_payout to database
         current_year = estimated_years[0]
-        proc_data = finder.current_payout(profile_id, current_year)
+        proc_data = loader.current_payout(profile_id, current_year)
 
-        # add estimated_payout
+        # add estimated_payout to database
         next_year = estimated_years[1]
-        proc_data = finder.estimated_payout(profile_id, next_year)
+        proc_data = loader.estimated_payout(profile_id, next_year)
 
-        # add estimated_dividends
+        # add estimated_dividends to database
         next_year = estimated_years[1]
-        proc_data = finder.estimated_dividends(profile_id, next_year)
+        proc_data = loader.estimated_dividends(profile_id, next_year)
 
         # print(proc_data)

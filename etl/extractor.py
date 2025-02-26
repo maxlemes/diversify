@@ -10,7 +10,7 @@ logging.basicConfig(
 )
 
 
-class YFinanceCollector:
+class Extractor:
     def __init__(self, ticker: str):
         """Initializes the data collection class."""
         self.ticker = ticker
@@ -157,7 +157,7 @@ class YFinanceCollector:
 
 # ------------------- TEST ---------------------------------------------------------
 if __name__ == "__main__":
-    collector = YFinanceCollector("WEGE3")
+    collector = Extractor("WEGE3")
     # info = collector.get_price()
     info = collector.fetch_company_profile()
     # info = collector.fetch_stock_prices()

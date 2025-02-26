@@ -5,24 +5,22 @@ logging.basicConfig(
 )
 
 
-class SQLFinder:
-    def __init__(self, db_manager):
+class SQLLoader:
+    def __init__(self, db_manager, ticker):
         """
         Initializes the DataHandler with a database connection.
 
         :param db_connection: Database connection object.
         """
         self.db = db_manager
+        self.profile_id = self.db.fetch_profile_id(ticker)
 
     import logging
 
-    def fetch_roe(self, profile_id):
+    def fetch_roe(self):
         """
         Calculates the ROE (Return on Equity) for a specific asset based on its profile ID
         and stores the results in the 'ests' table.
-
-        Parameters:
-            profile_id (int): The ID of the profile for which to calculate ROE.
 
         Returns:
             list: A list of tuples containing (profile_id, year, roe).
@@ -42,8 +40,9 @@ class SQLFinder:
             """
 
             # Execute the query and get the result
-            self.db.cursor.execute(query_roe, (profile_id,))
+            self.db.cursor.execute(query_roe, (self.profile_id,))
             results = self.db.cursor.fetchall()
+            print(results)
 
             columns = ("profile_id", "year", "roe")
             self.db.update_data("ests", columns, results)
@@ -52,19 +51,16 @@ class SQLFinder:
 
         except Exception as e:
             logging.error(
-                f"Error fetching and storing ROE for profile_id {profile_id}: {e}"
+                f"Error fetching and storing ROE for profile_id {self.profile_id}: {e}"
             )
             return []
 
     import logging
 
-    def fetch_eps(self, profile_id):
+    def fetch_eps(self):
         """
         Calculates the EPS (Earnings Per Share) for a specific asset based on its profile ID
         and stores the results in the 'ests' table.
-
-        Parameters:
-            profile_id (int): The ID of the profile for which to calculate EPS.
 
         Returns:
             list: A list of tuples containing (profile_id, year, eps).
@@ -87,7 +83,7 @@ class SQLFinder:
             """
 
             # Execute the query and get the result
-            self.db.cursor.execute(query_eps, (profile_id,))
+            self.db.cursor.execute(query_eps, (self.profile_id,))
             result = self.db.cursor.fetchall()
 
             columns = ("profile_id", "year", "eps")
@@ -99,23 +95,20 @@ class SQLFinder:
         except Exception as e:
             # Log the error with the profile_id for better debugging
             logging.error(
-                f"Error calculating and storing EPS for profile_id {profile_id}: {e}"
+                f"Error calculating and storing EPS for profile_id {self.profile_id}: {e}"
             )
             # Return an empty list in case of error
             return []
 
         import logging
 
-    def fetch_payout(self, profile_id):
+    def fetch_payout(self):
         """
         Calculates the Payout Ratio for a specific asset based on its profile ID
         and stores the results in the 'ests' table.
 
         The Payout Ratio is calculated as:
             payout = -dividends_paid / net_income
-
-        Parameters:
-            profile_id (int): The ID of the profile for which to calculate the Payout Ratio.
 
         Returns:
             list: A list of tuples containing (profile_id, year, payout).
@@ -140,7 +133,7 @@ class SQLFinder:
             """
 
             # Execute the query and get the result
-            self.db.cursor.execute(query_payout, (profile_id,))
+            self.db.cursor.execute(query_payout, (self.profile_id,))
             result = self.db.cursor.fetchall()
 
             columns = ("profile_id", "year", "payout")
@@ -152,12 +145,12 @@ class SQLFinder:
         except Exception as e:
             # Log the error with the profile_id for better debugging
             logging.error(
-                f"Error calculating and storing Payout for profile_id {profile_id}: {e}"
+                f"Error calculating and storing Payout for profile_id {self.profile_id}: {e}"
             )
             # Return an empty list in case of error
             return []
 
-    def current_payout(self, profile_id, current_year):
+    def current_payout(self, current_year):
         """
         Estimates the payout for a specific profile_id using the formula: payout = dividends / eps
         for the given year, and stores the result in the 'ests' table.
@@ -178,7 +171,7 @@ class SQLFinder:
             """
 
             # Execute the query with the profile_id and year as parameters
-            self.db.cursor.execute(query, (profile_id, current_year))
+            self.db.cursor.execute(query, (self.profile_id, current_year))
             result = self.db.cursor.fetchone()
 
             # Calculate the payout if data is available
@@ -190,7 +183,7 @@ class SQLFinder:
                     payout = dividends / eps
 
                     columns = ("profile_id", "year", "payout")
-                    values = [(profile_id, year, payout)]
+                    values = [(self.profile_id, year, payout)]
 
                     self.db.update_data("ests", columns, values)
 
@@ -200,17 +193,17 @@ class SQLFinder:
                     return result
             else:
                 logging.warning(
-                    f"No data found for profile_id {profile_id} and year {year}."
+                    f"No data found for profile_id {self.profile_id} and year {current_year}."
                 )
                 return result
 
         except Exception as e:
             logging.error(
-                f"Error calculating and storing payout estimate for profile_id {profile_id} and year {year}: {e}"
+                f"Error calculating and storing payout estimate for profile_id {self.profile_id} and year {current_year}: {e}"
             )
             return (year, None)
 
-    def estimated_payout(self, profile_id, next_year):
+    def estimated_payout(self, next_year):
         """
         Calculates the average payout for the 5 years before and including years[0],
         and stores the result in the year specified by next_year.
@@ -235,7 +228,7 @@ class SQLFinder:
             """
 
             # Execute the query to fetch payouts for the specified years
-            self.db.cursor.execute(query, (profile_id, start_year, end_year))
+            self.db.cursor.execute(query, (self.profile_id, start_year, end_year))
             results = self.db.cursor.fetchall()
 
             # Calculate the average payout if data is available
@@ -246,7 +239,7 @@ class SQLFinder:
                     average_payout = sum(payouts) / len(payouts)
 
                     columns = ("profile_id", "year", "payout")
-                    values = [(profile_id, next_year, average_payout)]
+                    values = [(self.profile_id, next_year, average_payout)]
 
                     self.db.update_data("ests", columns, values)
 
@@ -254,22 +247,22 @@ class SQLFinder:
 
                 else:
                     logging.warning(
-                        f"No valid payouts found for profile_id {profile_id} from {start_year} to {end_year}."
+                        f"No valid payouts found for profile_id {self.profile_id} from {start_year} to {end_year}."
                     )
                     return (next_year, None)
             else:
                 logging.warning(
-                    f"No payout data found for profile_id {profile_id} in the years {start_year}-{end_year}."
+                    f"No payout data found for profile_id {self.profile_id} in the years {start_year}-{end_year}."
                 )
                 return (next_year, None)
 
         except Exception as e:
             logging.error(
-                f"Error calculating and storing payout estimate for profile_id {profile_id} and years {years[0]}-{next_year}: {e}"
+                f"Error calculating and storing payout estimate for profile_id {self.profile_id}: {e}"
             )
             return (next_year, None)
 
-    def estimated_dividends(self, profile_id, next_year):
+    def estimated_dividends(self, next_year):
         """
         Calculates the dividends for the 'ttm' year and the specified year in next_year,
         and stores the results in the 'ests' table.
@@ -292,13 +285,13 @@ class SQLFinder:
 
             next_year = str(next_year)
             # Execute the query
-            self.db.cursor.execute(query, (profile_id, next_year))
+            self.db.cursor.execute(query, (self.profile_id, next_year))
             results = self.db.cursor.fetchall()
 
             # Check if we have results for 'ttm' and next_year
             if len(results) < 2:
                 logging.warning(
-                    f"Not enough data found for profile_id {profile_id} in 'ttm' and year {next_year}."
+                    f"Not enough data found for profile_id {self.profile_id} in 'ttm' and year {next_year}."
                 )
                 return (next_year, None)
 
@@ -321,8 +314,8 @@ class SQLFinder:
 
             columns = ("profile_id", "year", "dividends")
 
-            values = [(profile_id, next_year, dividends_year)]
-            values = [(profile_id, "ttm", dividends_ttm)] + values
+            values = [(self.profile_id, next_year, dividends_year)]
+            values = [(self.profile_id, "ttm", dividends_ttm)] + values
 
             self.db.update_data("ests", columns, values)
 
@@ -330,7 +323,7 @@ class SQLFinder:
 
         except Exception as e:
             logging.error(
-                f"Error calculating and storing dividends estimate for profile_id {profile_id} and years {years[0]}-{years[1]}: {e}"
+                f"Error calculating and storing dividends estimate for profile_id {self.profile_id}: {e}"
             )
             return (next_year, None)
 
