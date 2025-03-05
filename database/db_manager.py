@@ -259,7 +259,7 @@ if __name__ == "__main__":
     # Load the table definitions from the tables JSON file
     with open(tables_path, "r") as f:
         tables = json.load(f)
-    print(tables)
+    # print(tables)
     # Create the database connection and initialize the tables
     with DatabaseManager(db_path) as conn:
         conn.create_initial_tables(tables)

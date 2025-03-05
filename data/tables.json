@@ -98,6 +98,7 @@
         "payout": "REAL",
         "dividends": "REAL",
         "eps": "REAL",
+        "payout_return": "REAL",
         "PRIMARY KEY": "(profile_id, year)",
         "FOREIGN KEY": "(profile_id) REFERENCES profile(id) ON DELETE CASCADE"
     }

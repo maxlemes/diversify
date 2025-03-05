@@ -95,6 +95,12 @@ class Transformer:
         ]
         data = data[filtered_columns].rename(columns=self.filters[balance_type])
 
+        # filter to columns NaN
+        filters = ["total_revenue", "total_assets", "net_income"]
+        for item in filters:
+            if item in data.columns:
+                data.dropna(subset=[item], inplace=True)
+
         # Convert DataFrame to a list of tuples and add 'year' as the first column
         processed_data = self.dataframe_to_tuples(data)
         columns = tuple(["year"] + list(data.columns))

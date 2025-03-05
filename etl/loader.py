@@ -6,14 +6,14 @@ logging.basicConfig(
 
 
 class SQLLoader:
-    def __init__(self, db_manager, ticker):
+    def __init__(self, db_manager, profile_id):
         """
         Initializes the DataHandler with a database connection.
 
         :param db_connection: Database connection object.
         """
         self.db = db_manager
-        self.profile_id = self.db.fetch_profile_id(ticker)
+        self.profile_id = profile_id
 
     import logging
 
@@ -42,7 +42,6 @@ class SQLLoader:
             # Execute the query and get the result
             self.db.cursor.execute(query_roe, (self.profile_id,))
             results = self.db.cursor.fetchall()
-            print(results)
 
             columns = ("profile_id", "year", "roe")
             self.db.update_data("ests", columns, results)
@@ -72,14 +71,12 @@ class SQLLoader:
                 income_stmt.profile_id,   -- Fetch profile ID from the income statement
                 income_stmt.year,         -- Fetch year from the income statement
                 (income_stmt.net_income / NULLIF(balance_sheet.ordinary_shares, 0)) AS eps
-                -- Calculate EPS by dividing net income by ordinary shares (avoid division by 0 with NULLIF)
             FROM income_stmt
             JOIN balance_sheet 
                 ON income_stmt.profile_id = balance_sheet.profile_id 
                 AND income_stmt.year = balance_sheet.year
             WHERE income_stmt.profile_id = ? 
                 AND balance_sheet.ordinary_shares IS NOT NULL;
-                -- Filter by profile_id and ensure ordinary_shares is not null
             """
 
             # Execute the query and get the result
@@ -119,17 +116,14 @@ class SQLLoader:
             SELECT 
                 income_stmt.profile_id,   -- Fetch profile ID from the income statement
                 income_stmt.year,         -- Fetch year from the income statement
-                (-cash_flow.dividends_paid / NULLIF(income_stmt.net_income, 0)) AS payout
-                -- Calculate payout ratio: -dividends_paid / net_income (avoid division by 0 with NULLIF)
+                ABS(COALESCE(cash_flow.dividends_paid, 0) / NULLIF(income_stmt.net_income, 0)) AS payout
             FROM income_stmt
             JOIN cash_flow 
                 ON income_stmt.profile_id = cash_flow.profile_id 
                 AND income_stmt.year = cash_flow.year
             WHERE income_stmt.profile_id = ? 
-                AND cash_flow.dividends_paid < 0 
                 AND income_stmt.net_income IS NOT NULL
-                AND cash_flow.dividends_paid IS NOT NULL;
-                -- Ensure that dividends_paid is negative and both values are not NULL
+                AND income_stmt.year <> 'ttm'
             """
 
             # Execute the query and get the result
@@ -148,6 +142,48 @@ class SQLLoader:
                 f"Error calculating and storing Payout for profile_id {self.profile_id}: {e}"
             )
             # Return an empty list in case of error
+            return []
+
+    def missing_dividends(self):
+        """Estimates the dividends when dividends is NULL."""
+
+        try:
+            # Prepare the query to fetch the relevant data from the 'ests' table
+            query = """
+            UPDATE ests
+            SET dividends = payout * eps
+            WHERE dividends IS NULL;
+            """
+
+            # Execute the query with the profile_id and year as parameters
+            self.db.cursor.execute(query)
+            self.db.commit()
+
+        except Exception as e:
+            logging.error(
+                f"Error calculating and storing dividends missing for profile_id {self.profile_id}: {e}"
+            )
+            return []
+
+    def payout_returns(self):
+        """Estimates payout returns."""
+
+        try:
+            # Prepare the query to fetch the relevant data from the 'ests' table
+            query = """
+            UPDATE ests
+            SET payout_return = roe * CASE WHEN (1 - payout) < 0 THEN 0 ELSE (1 - payout) END
+            WHERE payout_return IS NULL;
+            """
+
+            # Execute the query with the profile_id and year as parameters
+            self.db.cursor.execute(query)
+            self.db.commit()
+
+        except Exception as e:
+            logging.error(
+                f"Error calculating and storing payout returns for profile_id {self.profile_id}: {e}"
+            )
             return []
 
     def current_payout(self, current_year):
@@ -203,7 +239,7 @@ class SQLLoader:
             )
             return (year, None)
 
-    def estimated_payout(self, next_year):
+    def estimated_payout(self, year):
         """
         Calculates the average payout for the 5 years before and including years[0],
         and stores the result in the year specified by next_year.
@@ -218,8 +254,8 @@ class SQLLoader:
         """
         try:
             # Fetch the 5 years of payout data from the 'ests' table
-            start_year = int(next_year) - 5  # Calculate the start year (5 years before)
-            end_year = int(next_year) - 1  # The last year is years[
+            start_year = int(year) - 4  # Calculate the start year (5 years before)
+            end_year = int(year)  # The last year is years[
 
             query = """
             SELECT payout
@@ -239,7 +275,7 @@ class SQLLoader:
                     average_payout = sum(payouts) / len(payouts)
 
                     columns = ("profile_id", "year", "payout")
-                    values = [(self.profile_id, next_year, average_payout)]
+                    values = [(self.profile_id, year, average_payout)]
 
                     self.db.update_data("ests", columns, values)
 
@@ -249,18 +285,75 @@ class SQLLoader:
                     logging.warning(
                         f"No valid payouts found for profile_id {self.profile_id} from {start_year} to {end_year}."
                     )
-                    return (next_year, None)
+                    return (year, None)
             else:
                 logging.warning(
                     f"No payout data found for profile_id {self.profile_id} in the years {start_year}-{end_year}."
                 )
-                return (next_year, None)
+                return (year, None)
 
         except Exception as e:
             logging.error(
                 f"Error calculating and storing payout estimate for profile_id {self.profile_id}: {e}"
             )
-            return (next_year, None)
+            return (year, None)
+
+    def estimated_roe(self, year):
+        """
+        Calculates the average ROE for the 5 years before and including the given year,
+        and stores the result in the specified year.
+
+        Parameters:
+            year (int): The last year to calculate the average.
+
+        Returns:
+            tuple: A tuple containing (year, average_roe).
+        """
+        try:
+            # Define o intervalo de anos (últimos 5 anos incluindo o atual)
+            start_year = int(year) - 4
+            end_year = int(year)
+
+            query = """
+            SELECT roe
+            FROM ests
+            WHERE profile_id = ? AND year BETWEEN ? AND ?
+            """
+
+            # Executa a consulta para buscar os valores de ROE
+            self.db.cursor.execute(query, (self.profile_id, start_year, end_year))
+            results = self.db.cursor.fetchall()
+
+            # Calcula a média do ROE se houver dados disponíveis
+            if results:
+                roes = [result[0] for result in results if result[0] is not None]
+
+                if roes:
+                    average_roe = sum(roes) / len(roes)
+
+                    columns = ("profile_id", "year", "roe")
+                    values = [(self.profile_id, year, average_roe)]
+
+                    self.db.update_data("ests", columns, values)
+
+                    return values
+
+                else:
+                    logging.warning(
+                        f"No valid ROE values found for profile_id {self.profile_id} from {start_year} to {end_year}."
+                    )
+                    return (year, None)
+            else:
+                logging.warning(
+                    f"No ROE data found for profile_id {self.profile_id} in the years {start_year}-{end_year}."
+                )
+                return (year, None)
+
+        except Exception as e:
+            logging.error(
+                f"Error calculating and storing ROE estimate for profile_id {self.profile_id}: {e}"
+            )
+            return (year, None)
 
     def estimated_dividends(self, next_year):
         """

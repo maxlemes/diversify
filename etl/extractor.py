@@ -161,7 +161,7 @@ if __name__ == "__main__":
     # info = collector.get_price()
     info = collector.fetch_company_profile()
     # info = collector.fetch_stock_prices()
-    info = collector.fetch_data("quarterly_income_stmt")
+    info = collector.fetch_data("income_stmt")
     # info = collector.fetch_data('balance_sheet')
     # info = collector.fetch_data('cash_flow')
     # info = collector.fetch_data('dividends')
