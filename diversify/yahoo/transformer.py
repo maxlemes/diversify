@@ -259,7 +259,7 @@ class Transformer:
 # ------------------- TEST ---------------------------------------------------------
 if __name__ == "__main__":
 
-    from diversify.database.db_manager import DatabaseManager
+    from diversify.database.manager import DatabaseManager
     from diversify.yahoo.extractor import Extractor
     from diversify.yahoo.loader import SQLLoader
 

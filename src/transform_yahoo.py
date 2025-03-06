@@ -2,7 +2,7 @@ import json
 import os
 import pickle
 
-from diversify.yahoo.transformer import Transformer
+from diversify import Transformer
 
 
 def transform():
@@ -24,14 +24,17 @@ def transform():
     with open("tmp/quotes.pkl", "rb") as f:
         data = pickle.load(f)
 
+    # process stock prices
+    data = transformer.process_stock_prices(data)
+
     # Save transformed stock prices
     with open("tmp/quotes_t.pkl", "wb") as f:
         pickle.dump(data, f)
 
     # Define financial statements to process -----------------------
-    financials_data = ["income_stmt", "balance_sheet", "cash_flow"]
+    balance_types = ["income_stmt", "balance_sheet", "cash_flow"]
 
-    for balance_type in financials_data:
+    for balance_type in balance_types:
         # Load financial statement data
         with open(f"tmp/{balance_type}.pkl", "rb") as f:
             data = pickle.load(f)

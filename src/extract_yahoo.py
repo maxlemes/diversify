@@ -1,8 +1,7 @@
 import json
 import os
 
-from diversify.database.manager import DatabaseManager
-from diversify.yahoo.extractor import Extractor
+from diversify import DatabaseManager, Extractor
 
 
 def extract(ticker):
