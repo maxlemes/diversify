@@ -5,12 +5,8 @@ import traceback
 import pandas as pd
 import yfinance as yf
 
-import diversify.config_log
-from database.gerenciador import GerenciadorBanco
-from database.operacoes import OperacoesBanco
-from scrapping.fontes import FONTES
-from scrapping.raspador import Raspador
-from scrapping.tratador import TratadorDeDados
+from etl_tradinview.raspador import Raspador
+from etl_tradinview.tratador import TratadorDeDados
 
 
 class Coletor:

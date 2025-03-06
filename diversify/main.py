@@ -1,7 +1,7 @@
 # Importando as classes que você criou
 from database.gerenciador import GerenciadorBanco
 from database.operacoes import OperacoesBanco
-from scrapping.empresas import EMPRESAS
+from etl_tradinview.empresas import EMPRESAS
 
 if __name__ == "__main__":
     banco = GerenciadorBanco()

@@ -4,10 +4,10 @@ import yfinance as yf
 from database.gerenciador import GerenciadorBanco
 from database.operacoes import OperacoesBanco
 from diversify.github_api import GitHubAPI
-from scrapping.coletor import Coletor
-from scrapping.dados_teste import DADOS_TESTE
-from scrapping.raspador import Raspador
-from scrapping.tratador import TratadorDeDados
+from etl_tradinview.coletor import Coletor
+from etl_tradinview.dados_teste import DADOS_TESTE
+from etl_tradinview.raspador import Raspador
+from etl_tradinview.tratador import TratadorDeDados
 
 github = GitHubAPI()
 

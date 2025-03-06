@@ -4,7 +4,7 @@ DADOS_TESTE = {
             "",
             "",
             "Moeda: BRL",
-            "2004\nDez 2004\n2005\nDez 2005\n2006\nDez 2006\n2007\nDez 2007\n2008\nDez 2008\n2009\nDez 2009\n2010\nDez 2010\n2011\nDez 2011\n2012\nDez 2012\n2013\nDez 2013\n2014\nDez 2014\n2015\nDez 2015\n2016\nDez 2016\n2017\nDez 2017\n2018\nDez 2018\n2019\nDez 2019\n2020\nDez 2020\n2021\nDez 2021\n2022\nDez 2022\n2023\nDez 2023\nTTM",
+            "2005\nDez 2005\n2006\nDez 2006\n2007\nDez 2007\n2008\nDez 2008\n2009\nDez 2009\n2010\nDez 2010\n2011\nDez 2011\n2012\nDez 2012\n2013\nDez 2013\n2014\nDez 2014\n2015\nDez 2015\n2016\nDez 2016\n2017\nDez 2017\n2018\nDez 2018\n2019\nDez 2019\n2020\nDez 2020\n2021\nDez 2021\n2022\nDez 2022\n2023\nDez 2023\n2024\nDez 2024\nTTM",
             "",
         ],
         [
@@ -12,7 +12,7 @@ DADOS_TESTE = {
             "",
             "Receita Total",
             "",
-            "\u202a\u202a13,35\u202fB\u202c\u202c\n+11,51%\n\u202a\u202a17,47\u202fB\u202c\u202c\n+30,88%\n\u202a\u202a23,56\u202fB\u202c\u202c\n+34,88%\n\u202a\u202a29,90\u202fB\u202c\u202c\n+26,91%\n\u202a\u202a32,50\u202fB\u202c\u202c\n+8,69%\n\u202a\u202a35,73\u202fB\u202c\u202c",
+            "\u202a\u202a17,47\u202fB\u202c\u202c\n+30,88%\n\u202a\u202a23,56\u202fB\u202c\u202c\n+34,88%\n\u202a\u202a29,90\u202fB\u202c\u202c\n+26,91%\n\u202a\u202a32,50\u202fB\u202c\u202c\n+8,69%\n\u202a\u202a37,99\u202fB\u202c\u202c\n+16,87%\n\u202a\u202a37,99\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -20,7 +20,7 @@ DADOS_TESTE = {
             "",
             "Custo das mercadorias vendidas",
             "",
-            "\u202a\u202a−9,70\u202fB\u202c\u202c\n\u202a\u202a−12,46\u202fB\u202c\u202c\n\u202a\u202a−17,17\u202fB\u202c\u202c\n\u202a\u202a−21,88\u202fB\u202c\u202c\n\u202a\u202a−22,57\u202fB\u202c\u202c\n\u202a\u202a−24,57\u202fB\u202c\u202c",
+            "\u202a\u202a−12,46\u202fB\u202c\u202c\n\u202a\u202a−17,17\u202fB\u202c\u202c\n\u202a\u202a−21,88\u202fB\u202c\u202c\n\u202a\u202a−22,57\u202fB\u202c\u202c\n\u202a\u202a−26,02\u202fB\u202c\u202c\n\u202a\u202a−26,02\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -28,7 +28,7 @@ DADOS_TESTE = {
             "",
             "Lucro Bruto",
             "",
-            "\u202a\u202a3,65\u202fB\u202c\u202c\n+13,23%\n\u202a\u202a5,01\u202fB\u202c\u202c\n+37,33%\n\u202a\u202a6,39\u202fB\u202c\u202c\n+27,68%\n\u202a\u202a8,03\u202fB\u202c\u202c\n+25,63%\n\u202a\u202a9,94\u202fB\u202c\u202c\n+23,77%\n\u202a\u202a11,16\u202fB\u202c\u202c",
+            "\u202a\u202a5,01\u202fB\u202c\u202c\n+37,33%\n\u202a\u202a6,39\u202fB\u202c\u202c\n+27,68%\n\u202a\u202a8,03\u202fB\u202c\u202c\n+25,63%\n\u202a\u202a9,94\u202fB\u202c\u202c\n+23,77%\n\u202a\u202a11,96\u202fB\u202c\u202c\n+20,38%\n\u202a\u202a11,96\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -36,7 +36,7 @@ DADOS_TESTE = {
             "",
             "Despesas operacionais (excl. CPV)",
             "",
-            "\u202a\u202a−1,81\u202fB\u202c\u202c\n\u202a\u202a−2,17\u202fB\u202c\u202c\n\u202a\u202a−2,62\u202fB\u202c\u202c\n\u202a\u202a−3,01\u202fB\u202c\u202c\n\u202a\u202a−3,46\u202fB\u202c\u202c\n\u202a\u202a−3,98\u202fB\u202c\u202c",
+            "\u202a\u202a−2,17\u202fB\u202c\u202c\n\u202a\u202a−2,62\u202fB\u202c\u202c\n\u202a\u202a−3,01\u202fB\u202c\u202c\n\u202a\u202a−3,46\u202fB\u202c\u202c\n\u202a\u202a−4,31\u202fB\u202c\u202c\n\u202a\u202a−4,31\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -44,7 +44,7 @@ DADOS_TESTE = {
             "",
             "Resultado Operacional",
             "",
-            "\u202a\u202a1,84\u202fB\u202c\u202c\n+21,36%\n\u202a\u202a2,83\u202fB\u202c\u202c\n+54,22%\n\u202a\u202a3,77\u202fB\u202c\u202c\n+33,16%\n\u202a\u202a5,02\u202fB\u202c\u202c\n+33,21%\n\u202a\u202a6,48\u202fB\u202c\u202c\n+28,98%\n\u202a\u202a7,17\u202fB\u202c\u202c",
+            "\u202a\u202a2,83\u202fB\u202c\u202c\n+54,22%\n\u202a\u202a3,77\u202fB\u202c\u202c\n+33,16%\n\u202a\u202a5,02\u202fB\u202c\u202c\n+33,21%\n\u202a\u202a6,48\u202fB\u202c\u202c\n+28,98%\n\u202a\u202a7,65\u202fB\u202c\u202c\n+18,08%\n\u202a\u202a7,65\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -52,7 +52,7 @@ DADOS_TESTE = {
             "",
             "Receita não operacional, total",
             "",
-            "\u202a\u202a−42,52\u202fM\u202c\u202c\n\u202a\u202a−89,50\u202fM\u202c\u202c\n\u202a\u202a558,63\u202fM\u202c\u202c\n\u202a\u202a91,60\u202fM\u202c\u202c\n\u202a\u202a110,76\u202fM\u202c\u202c\n\u202a\u202a190,45\u202fM\u202c\u202c",
+            "\u202a\u202a−89,50\u202fM\u202c\u202c\n\u202a\u202a558,63\u202fM\u202c\u202c\n\u202a\u202a91,60\u202fM\u202c\u202c\n\u202a\u202a110,76\u202fM\u202c\u202c\n\u202a\u202a262,23\u202fM\u202c\u202c\n\u202a\u202a262,23\u202fM\u202c\u202c",
             "",
         ],
         [
@@ -60,7 +60,7 @@ DADOS_TESTE = {
             "",
             "Receita antes de impostos",
             "",
-            "\u202a\u202a1,79\u202fB\u202c\u202c\n+20,07%\n\u202a\u202a2,74\u202fB\u202c\u202c\n+52,88%\n\u202a\u202a4,33\u202fB\u202c\u202c\n+57,87%\n\u202a\u202a5,12\u202fB\u202c\u202c\n+18,14%\n\u202a\u202a6,59\u202fB\u202c\u202c\n+28,83%\n\u202a\u202a7,36\u202fB\u202c\u202c",
+            "\u202a\u202a2,74\u202fB\u202c\u202c\n+52,88%\n\u202a\u202a4,33\u202fB\u202c\u202c\n+57,87%\n\u202a\u202a5,12\u202fB\u202c\u202c\n+18,14%\n\u202a\u202a6,59\u202fB\u202c\u202c\n+28,83%\n\u202a\u202a7,91\u202fB\u202c\u202c\n+20,07%\n\u202a\u202a7,91\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -68,7 +68,7 @@ DADOS_TESTE = {
             "",
             "Equity em resultados",
             "",
-            "\u202a\u202a10,44\u202fM\u202c\u202c\n\u202a\u202a3,87\u202fM\u202c\u202c\n\u202a0,00\u202c\n\u202a0,00\u202c\n\u202a\u202a113,00\u202fK\u202c\u202c\n\u202a\u202a−921,00\u202fK\u202c\u202c",
+            "\u202a\u202a3,87\u202fM\u202c\u202c\n\u202a0,00\u202c\n\u202a0,00\u202c\n\u202a\u202a113,00\u202fK\u202c\u202c\n\u202a\u202a−5,20\u202fM\u202c\u202c\n\u202a\u202a−5,20\u202fM\u202c\u202c",
             "",
         ],
         [
@@ -76,7 +76,7 @@ DADOS_TESTE = {
             "",
             "Impostos",
             "",
-            "\u202a\u202a−172,00\u202fM\u202c\u202c\n\u202a\u202a−350,69\u202fM\u202c\u202c\n\u202a\u202a−672,56\u202fM\u202c\u202c\n\u202a\u202a−842,77\u202fM\u202c\u202c\n\u202a\u202a−723,18\u202fM\u202c\u202c\n\u202a\u202a−1,02\u202fB\u202c\u202c",
+            "\u202a\u202a−350,69\u202fM\u202c\u202c\n\u202a\u202a−672,56\u202fM\u202c\u202c\n\u202a\u202a−842,77\u202fM\u202c\u202c\n\u202a\u202a−723,18\u202fM\u202c\u202c\n\u202a\u202a−1,59\u202fB\u202c\u202c\n\u202a\u202a−1,59\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -84,7 +84,7 @@ DADOS_TESTE = {
             "",
             "Participação de não-controladores/minoritários",
             "",
-            "\u202a\u202a−17,87\u202fM\u202c\u202c\n\u202a\u202a−55,08\u202fM\u202c\u202c\n\u202a\u202a−71,53\u202fM\u202c\u202c\n\u202a\u202a−64,79\u202fM\u202c\u202c\n\u202a\u202a−135,94\u202fM\u202c\u202c\n\u202a\u202a−244,60\u202fM\u202c\u202c",
+            "\u202a\u202a−55,08\u202fM\u202c\u202c\n\u202a\u202a−71,53\u202fM\u202c\u202c\n\u202a\u202a−64,79\u202fM\u202c\u202c\n\u202a\u202a−135,94\u202fM\u202c\u202c\n\u202a\u202a−276,17\u202fM\u202c\u202c\n\u202a\u202a−276,17\u202fM\u202c\u202c",
             "",
         ],
         [
@@ -100,7 +100,7 @@ DADOS_TESTE = {
             "",
             "Lucro líquido antes das operações descontinuadas",
             "",
-            "\u202a\u202a1,61\u202fB\u202c\u202c\n\u202a\u202a2,34\u202fB\u202c\u202c\n\u202a\u202a3,59\u202fB\u202c\u202c\n\u202a\u202a4,21\u202fB\u202c\u202c\n\u202a\u202a5,73\u202fB\u202c\u202c\n\u202a\u202a6,09\u202fB\u202c\u202c",
+            "\u202a\u202a2,34\u202fB\u202c\u202c\n\u202a\u202a3,59\u202fB\u202c\u202c\n\u202a\u202a4,21\u202fB\u202c\u202c\n\u202a\u202a5,73\u202fB\u202c\u202c\n\u202a\u202a6,04\u202fB\u202c\u202c\n\u202a\u202a6,04\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -116,7 +116,7 @@ DADOS_TESTE = {
             "",
             "Lucro Líquido",
             "",
-            "\u202a\u202a1,61\u202fB\u202c\u202c\n+20,64%\n\u202a\u202a2,34\u202fB\u202c\u202c\n+44,98%\n\u202a\u202a3,59\u202fB\u202c\u202c\n+53,19%\n\u202a\u202a4,21\u202fB\u202c\u202c\n+17,35%\n\u202a\u202a5,73\u202fB\u202c\u202c\n+36,21%\n\u202a\u202a6,09\u202fB\u202c\u202c",
+            "\u202a\u202a2,34\u202fB\u202c\u202c\n+44,98%\n\u202a\u202a3,59\u202fB\u202c\u202c\n+53,19%\n\u202a\u202a4,21\u202fB\u202c\u202c\n+17,35%\n\u202a\u202a5,73\u202fB\u202c\u202c\n+36,21%\n\u202a\u202a6,04\u202fB\u202c\u202c\n+5,42%\n\u202a\u202a6,04\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -140,7 +140,7 @@ DADOS_TESTE = {
             "",
             "Lucro líquido diluído disponível para acionistas ordinários",
             "",
-            "\u202a\u202a1,61\u202fB\u202c\u202c\n\u202a\u202a2,34\u202fB\u202c\u202c\n\u202a\u202a3,59\u202fB\u202c\u202c\n\u202a\u202a4,21\u202fB\u202c\u202c\n\u202a\u202a5,73\u202fB\u202c\u202c\n\u202a\u202a6,09\u202fB\u202c\u202c",
+            "\u202a\u202a2,34\u202fB\u202c\u202c\n\u202a\u202a3,59\u202fB\u202c\u202c\n\u202a\u202a4,21\u202fB\u202c\u202c\n\u202a\u202a5,73\u202fB\u202c\u202c\n\u202a\u202a6,04\u202fB\u202c\u202c\n\u202a\u202a6,04\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -148,7 +148,7 @@ DADOS_TESTE = {
             "",
             "Lucro básico por ação (EPS Básico)",
             "",
-            "\u202a0,38\u202c\n+20,63%\n\u202a0,56\u202c\n+44,97%\n\u202a0,85\u202c\n+53,16%\n\u202a1,00\u202c\n+17,35%\n\u202a1,37\u202c\n+36,22%\n\u202a1,45\u202c",
+            "\u202a0,56\u202c\n+44,97%\n\u202a0,85\u202c\n+53,16%\n\u202a1,00\u202c\n+17,35%\n\u202a1,37\u202c\n+36,22%\n\u202a1,44\u202c\n+5,43%\n\u202a1,44\u202c",
             "",
         ],
         [
@@ -156,7 +156,7 @@ DADOS_TESTE = {
             "",
             "Lucro diluído por ação (EPS Diluído)",
             "",
-            "\u202a0,38\u202c\n+20,63%\n\u202a0,56\u202c\n+44,97%\n\u202a0,85\u202c\n+53,22%\n\u202a1,00\u202c\n+17,33%\n\u202a1,37\u202c\n+36,23%\n\u202a1,45\u202c",
+            "\u202a0,56\u202c\n+44,97%\n\u202a0,85\u202c\n+53,22%\n\u202a1,00\u202c\n+17,33%\n\u202a1,37\u202c\n+36,23%\n\u202a1,44\u202c\n+5,43%\n\u202a1,44\u202c",
             "",
         ],
         [
@@ -164,7 +164,7 @@ DADOS_TESTE = {
             "",
             "Média de ações ordinárias em circulação",
             "",
-            "\u202a\u202a4,19\u202fB\u202c\u202c\n\u202a\u202a4,20\u202fB\u202c\u202c\n\u202a\u202a4,20\u202fB\u202c\u202c\n\u202a\u202a4,20\u202fB\u202c\u202c\n\u202a\u202a4,20\u202fB\u202c\u202c\n—",
+            "\u202a\u202a4,20\u202fB\u202c\u202c\n\u202a\u202a4,20\u202fB\u202c\u202c\n\u202a\u202a4,20\u202fB\u202c\u202c\n\u202a\u202a4,20\u202fB\u202c\u202c\n\u202a\u202a4,20\u202fB\u202c\u202c\n—",
             "",
         ],
         [
@@ -180,7 +180,7 @@ DADOS_TESTE = {
             "",
             "EBITDA",
             "",
-            "\u202a\u202a2,23\u202fB\u202c\u202c\n+22,02%\n\u202a\u202a3,28\u202fB\u202c\u202c\n+47,03%\n\u202a\u202a4,29\u202fB\u202c\u202c\n+30,70%\n\u202a\u202a5,59\u202fB\u202c\u202c\n+30,25%\n\u202a\u202a7,11\u202fB\u202c\u202c\n+27,16%\n\u202a\u202a7,91\u202fB\u202c\u202c",
+            "\u202a\u202a3,28\u202fB\u202c\u202c\n+47,03%\n\u202a\u202a4,29\u202fB\u202c\u202c\n+30,70%\n\u202a\u202a5,59\u202fB\u202c\u202c\n+30,25%\n\u202a\u202a7,11\u202fB\u202c\u202c\n+27,16%\n\u202a\u202a8,46\u202fB\u202c\u202c\n+19,08%\n\u202a\u202a8,46\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -188,7 +188,7 @@ DADOS_TESTE = {
             "",
             "EBIT",
             "",
-            "\u202a\u202a1,84\u202fB\u202c\u202c\n+21,36%\n\u202a\u202a2,83\u202fB\u202c\u202c\n+54,22%\n\u202a\u202a3,77\u202fB\u202c\u202c\n+33,16%\n\u202a\u202a5,02\u202fB\u202c\u202c\n+33,21%\n\u202a\u202a6,48\u202fB\u202c\u202c\n+28,98%\n\u202a\u202a7,17\u202fB\u202c\u202c",
+            "\u202a\u202a2,83\u202fB\u202c\u202c\n+54,22%\n\u202a\u202a3,77\u202fB\u202c\u202c\n+33,16%\n\u202a\u202a5,02\u202fB\u202c\u202c\n+33,21%\n\u202a\u202a6,48\u202fB\u202c\u202c\n+28,98%\n\u202a\u202a7,65\u202fB\u202c\u202c\n+18,08%\n\u202a\u202a7,65\u202fB\u202c\u202c",
             "",
         ],
         [
@@ -196,7 +196,7 @@ DADOS_TESTE = {
             "",
             "Total de custos operacionais",
             "",
-            "\u202a\u202a−11,51\u202fB\u202c\u202c\n\u202a\u202a−14,64\u202fB\u202c\u202c\n\u202a\u202a−19,79\u202fB\u202c\u202c\n\u202a\u202a−24,88\u202fB\u202c\u202c\n\u202a\u202a−26,02\u202fB\u202c\u202c\n\u202a\u202a−28,55\u202fB\u202c\u202c",
+            "\u202a\u202a−14,64\u202fB\u202c\u202c\n\u202a\u202a−19,79\u202fB\u202c\u202c\n\u202a\u202a−24,88\u202fB\u202c\u202c\n\u202a\u202a−26,02\u202fB\u202c\u202c\n\u202a\u202a−30,34\u202fB\u202c\u202c\n\u202a\u202a−30,34\u202fB\u202c\u202c",
             "",
         ],
     ],

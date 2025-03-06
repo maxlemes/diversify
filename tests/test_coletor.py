@@ -1,9 +1,8 @@
 import sqlite3
 
 from database.banco_de_dados import BancoDeDados
-
-from scrapping.coletor import Coletor
-from scrapping.tratador import TratadorDeDados
+from etl_tradinview.coletor import Coletor
+from etl_tradinview.tratador import TratadorDeDados
 
 # Criar uma instância do Coletor
 coletor = Coletor()

@@ -1,12 +1,16 @@
 import time
 
+from etl_yahoo.extractor import Extractor
+from etl_yahoo.loader import SQLLoader
+from etl_yahoo.transformer import Transformer
+
 
 class ETLManager:
     def __init__(self, database, ticker):
         self.db = database
         self.ticker = ticker
         self.extractor = Extractor(self.ticker)
-        self.transformer = Transformer(self.db)
+        self.transformer = Transformer()
         if self.db.fetch_profile_id(self.ticker):
             self.profile_id = self.db.fetch_profile_id(self.ticker)
             self.loader = SQLLoader(self.db, self.profile_id)
@@ -128,9 +132,6 @@ if __name__ == "__main__":
     from pathlib import Path
 
     from database.db_manager import DatabaseManager
-    from etl.extractor import Extractor
-    from etl.loader import SQLLoader
-    from etl.transformer import Transformer
 
     path = Path("data/files.json")  # ----------------------------------------------
     # Load the JSON file containing paths to the database and tables
@@ -139,12 +140,12 @@ if __name__ == "__main__":
     # Define paths for the database and tables
     db_path = Path(files["database"])
 
-    with DatabaseManager(db_path) as db:
+    with DatabaseManager(db_path) as database:
 
         tickers = ["WEGE3", "EGIE3"]
         for ticker in tickers:
-
-            etl = ETLManager(db, ticker)
+            print(f"Processando ticker: {ticker}")
+            etl = ETLManager(database, ticker)
 
             etl.add_perfil()
             etl.add_quotes()

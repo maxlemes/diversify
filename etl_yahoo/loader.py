@@ -15,8 +15,6 @@ class SQLLoader:
         self.db = db_manager
         self.profile_id = profile_id
 
-    import logging
-
     def fetch_roe(self):
         """
         Calculates the ROE (Return on Equity) for a specific asset based on its profile ID

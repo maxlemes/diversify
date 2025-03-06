@@ -1,8 +1,8 @@
 # main.py
 import pandas as pd
-from database.banco_de_dados import BancoDeDados
 
-from scrapping.empresas import *
+from database.banco_de_dados import BancoDeDados
+from etl_tradinview.empresas import *
 
 # Conectando ao banco de dados
 db = BancoDeDados("database/dados_empresas.db")

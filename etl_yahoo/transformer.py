@@ -6,18 +6,15 @@ from pathlib import Path
 import pandas as pd
 
 from database.db_manager import DatabaseManager
-from etl.extractor import Extractor
-from etl.loader import SQLLoader
+from etl_yahoo.extractor import Extractor
+from etl_yahoo.loader import SQLLoader
 
 
 class Transformer:
-    def __init__(self, db_manager):
+    def __init__(self):
         """
         Initializes the Transformer with a database connection.
-
-        :param db_connection: Database connection object.
         """
-        self.db_connection = db_manager
         # Load filters from filters.json
         self.filters = self._load_filters()
 
@@ -91,9 +88,11 @@ class Transformer:
 
         # Filter and rename columns based on the income statement filter
         filtered_columns = [
-            col for col in data.columns if col in self.filters[balance_type]
+            col for col in data.columns if col in self.filters["yahoo"][balance_type]
         ]
-        data = data[filtered_columns].rename(columns=self.filters[balance_type])
+        data = data[filtered_columns].rename(
+            columns=self.filters["yahoo"][balance_type]
+        )
 
         # filter to columns NaN
         filters = ["total_revenue", "total_assets", "net_income"]
@@ -133,9 +132,11 @@ class Transformer:
 
         # Filter columns to include only those specified in self.filters[balance_type]
         filtered_columns = [
-            col for col in data.columns if col in self.filters[balance_type]
+            col for col in data.columns if col in self.filters["yahoo"][balance_type]
         ]
-        data = data[filtered_columns].rename(columns=self.filters[balance_type])
+        data = data[filtered_columns].rename(
+            columns=self.filters["yahoo"][balance_type]
+        )
 
         # Convert the cleaned DataFrame to a list of tuples
         processed_data = self.dataframe_to_tuples(data)
