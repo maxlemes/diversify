@@ -1,13 +1,13 @@
 import pandas as pd
 import yfinance as yf
-
 from database.gerenciador import GerenciadorBanco
 from database.operacoes import OperacoesBanco
-from diversify.github_api import GitHubAPI
 from etl_tradinview.coletor import Coletor
 from etl_tradinview.dados_teste import DADOS_TESTE
 from etl_tradinview.raspador import Raspador
 from etl_tradinview.tratador import TratadorDeDados
+
+from diversify.github_api import GitHubAPI
 
 github = GitHubAPI()
 

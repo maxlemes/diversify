@@ -1,6 +1,5 @@
 # main.py
 import pandas as pd
-
 from database.banco_de_dados import BancoDeDados
 from etl_tradinview.empresas import *
 

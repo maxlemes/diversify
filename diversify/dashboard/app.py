@@ -4,10 +4,9 @@
 # Executa o servidor.
 
 import dash_bootstrap_components as dbc
-from dash import Dash
-
 import dashboard.callbacks  # Garante que os callbacks sejam carregados
 import dashboard.layouts  # Importa o layout
+from dash import Dash
 
 # Inicializa o app com Bootstrap
 app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])

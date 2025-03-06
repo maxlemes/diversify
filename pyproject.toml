@@ -16,6 +16,7 @@ dash-bootstrap-components = "^1.7.1"
 selenium = "^4.28.1"
 webdriver-manager = "^4.0.2"
 yfinance = "^0.2.54"
+click = "8.0.4"
 
 
 [tool.poetry.group.dev.dependencies]

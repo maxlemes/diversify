@@ -4,7 +4,6 @@ import traceback
 
 import pandas as pd
 import yfinance as yf
-
 from etl_tradinview.raspador import Raspador
 from etl_tradinview.tratador import TratadorDeDados
 

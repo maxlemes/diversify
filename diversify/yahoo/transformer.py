@@ -5,10 +5,6 @@ from pathlib import Path
 
 import pandas as pd
 
-from database.db_manager import DatabaseManager
-from etl_yahoo.extractor import Extractor
-from etl_yahoo.loader import SQLLoader
-
 
 class Transformer:
     def __init__(self):
@@ -262,6 +258,10 @@ class Transformer:
 
 # ------------------- TEST ---------------------------------------------------------
 if __name__ == "__main__":
+
+    from diversify.database.db_manager import DatabaseManager
+    from diversify.yahoo.extractor import Extractor
+    from diversify.yahoo.loader import SQLLoader
 
     path = Path("data/files.json")  # ----------------------------------------------
     # Load the JSON file containing paths to the database and tables

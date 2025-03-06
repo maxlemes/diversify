@@ -1,6 +1,5 @@
 import plotly.colors  # Importando a biblioteca de cores do Plotly
 import streamlit as st
-
 from graficos import criar_grafico, grafico_comparativo
 
 

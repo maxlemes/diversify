@@ -36,8 +36,9 @@ if __name__ == "__main__":
     import time
     from pathlib import Path
 
-    from database.db_manager import DatabaseManager
     from etl_tradinview.scraper import Scraper
+
+    from diversify.database.manager import DatabaseManager
 
     path = Path("data/files.json")  # ----------------------------------------------
     # Load the JSON file containing paths to the database and tables

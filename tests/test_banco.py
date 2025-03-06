@@ -1,5 +1,4 @@
 import pytest
-
 from database.gerenciador import GerenciadorBanco
 from database.operacoes import OperacoesBanco
 

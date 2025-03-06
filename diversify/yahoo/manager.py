@@ -1,8 +1,8 @@
 import time
 
-from etl_yahoo.extractor import Extractor
-from etl_yahoo.loader import SQLLoader
-from etl_yahoo.transformer import Transformer
+from diversify.yahoo.extractor import Extractor
+from diversify.yahoo.loader import SQLLoader
+from diversify.yahoo.transformer import Transformer
 
 
 class ETLManager:
@@ -148,7 +148,8 @@ if __name__ == "__main__":
             etl = ETLManager(database, ticker)
 
             etl.add_perfil()
-            etl.add_quotes()
             etl.add_balances()
+            etl.add_quotes()
+
             etl.add_drep()
             etl.add_estimates()

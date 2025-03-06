@@ -2,7 +2,6 @@
 # Responde a eventos como cliques, seleções e atualizações.
 
 from dash import Input, Output
-
 from dashboard.app import app
 
 

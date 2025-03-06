@@ -1,13 +1,12 @@
 import time
 
+from etl_tradinview.fontes import FONTES
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.firefox.service import Service
 from webdriver_manager.firefox import GeckoDriverManager
-
-from etl_tradinview.fontes import FONTES
 
 
 class Raspador:
