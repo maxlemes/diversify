@@ -1,8 +1,8 @@
 import time
 
-from etl_tradinview.collector import Collector
-from etl_tradinview.dataloader import DataLoader
-from etl_tradinview.refiner import Refiner
+from diversify.tradingview.collector import Collector
+from diversify.tradingview.dataloader import DataLoader
+from diversify.tradingview.refiner import Refiner
 
 
 class ETLIntegrator:
@@ -36,9 +36,8 @@ if __name__ == "__main__":
     import time
     from pathlib import Path
 
-    from etl_tradinview.scraper import Scraper
-
     from diversify.database.manager import DatabaseManager
+    from diversify.tradingview.scraper import Scraper
 
     path = Path("data/files.json")  # ----------------------------------------------
     # Load the JSON file containing paths to the database and tables

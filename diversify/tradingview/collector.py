@@ -2,7 +2,7 @@ import json
 import logging
 from pathlib import Path
 
-from etl_tradinview.scraper import Scraper
+from diversify.tradingview.scraper import Scraper
 
 # Logging configuration for development
 logging.basicConfig(
