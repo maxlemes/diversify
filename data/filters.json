@@ -90,7 +90,7 @@
         "balance_sheet" : {
             "Ativos Totais": "total_assets",
             "Total de Passivos": "total_liabilities",
-            "Patrimônio Total": "total_equity",
+            "Patrimônio Total": "stockholders_equity",
             "Total de passivos e patrimônio líquido": "total_liabilities_and_equity",
             "Dívida Total": "total_debt",
             "Dívida líquida": "net_debt",

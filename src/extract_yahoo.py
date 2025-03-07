@@ -1,12 +1,11 @@
 import json
 import os
 
-from diversify import DatabaseManager, Extractor
+from diversify import Extractor
 
 
 def extract(ticker):
     extractor = Extractor(ticker)  # Initialize the Extractor for the given ticker
-    db = DatabaseManager("diversify/data/database.db")
 
     # Fetch and save company profile as JSON
     data = extractor.fetch_company_profile()
