@@ -1,6 +1,0 @@
-{
-    "database": "data/database.db",
-    "filters": "data/filters.json",
-    "sources": "data/sources.json",
-    "tables": "data/tables.json"
-}
