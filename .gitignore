@@ -175,3 +175,6 @@ diversify/my_token.py
 
 # temporary files
 tmp/
+
+# data files
+data/
