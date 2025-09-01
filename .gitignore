@@ -178,3 +178,6 @@ tmp/
 
 # data files
 data/
+
+# data files
+drivers/
