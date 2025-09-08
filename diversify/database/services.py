@@ -48,29 +48,64 @@
 #
 # ==============================================================================
 
+from typing import List, Tuple
 
-# Dependências da nossa aplicação
 from db_nexus import DatabaseSessionManager
 
-from .repositories import (
-    AtivoRepository,
-    CarteiraRepository,
-    DadoHistoricoRepository,
-    TransacaoRepository,
-)
+from .models import TipoAtivo
+from .repositories import AtivoRepository
 
 
-class PortfolioService:
+class AtivoService:
     """
-    Orquestra as operações relacionadas à análise de portfólio.
-    Esta é a camada de lógica de negócio.
+    Contém a lógica de negócio de alto nível para lidar com a classe ATIVO.
     """
 
     def __init__(self, session_manager: DatabaseSessionManager):
-        # Injeção de Dependência: o serviço recebe o gerenciador de sessão.
         self.session_manager = session_manager
-        # O serviço instancia os repositórios que ele precisa.
         self.ativo_repo = AtivoRepository()
-        self.transacao_repo = TransacaoRepository()
-        self.dado_historico_repo = DadoHistoricoRepository()
-        self.carteira_repo = CarteiraRepository()
+
+    def populate_assets(
+        self,
+        composition_data: list[dict],
+        db_manager: DatabaseSessionManager,
+        tipo: TipoAtivo,
+    ):
+        """
+        Recebe dados de composição e popula a tabela 'ativos' no banco de dados.
+        """
+        print("\n--- Populando/Atualizando tabela de ativos ---")
+        ativo_repo = AtivoRepository()
+        created_or_updated_assets = []
+
+        with db_manager.get_session() as session:
+            for asset_info in composition_data:
+                ticker = asset_info["ticker"]
+                nome = asset_info["nome"]
+
+                # 2. Usa o repositório para buscar ou criar o ativo
+                ativo = ativo_repo.find_or_create(session, ticker, nome, tipo)
+                created_or_updated_assets.append(ativo)
+
+        print(
+            f"--- Tabela de ativos populada/atualizada com {len(created_or_updated_assets)} registros. ---"
+        )
+
+    def get_all_asset_ids_and_tickers(self) -> List[Tuple[int, str]]:
+        """
+        Orquestra a busca por IDs e tickers de todos os ativos.
+
+        Gerencia a sessão do banco de dados, garantindo que a conexão
+        seja aberta e fechada corretamente.
+        """
+        print("Serviço solicitado para buscar IDs e Tickers.")
+        # O 'with' statement do seu db_nexus cuida de TUDO:
+        # 1. Abre a conexão e inicia a sessão.
+        # 2. Executa o código dentro do bloco.
+        # 3. Se tudo der certo, ele fecha a sessão e a conexão.
+        # 4. Se ocorrer um erro, ele desfaz a transação (rollback) e DEPOIS fecha tudo.
+        with self.session_manager.get_session() as session:
+            # Delega a busca ao repositório, que sabe como falar com o banco
+            lista_de_ativos = self.ativo_repo.list_all_ids_and_tickers(session)
+            print(f"Encontrados {len(lista_de_ativos)} ativos.")
+            return lista_de_ativos

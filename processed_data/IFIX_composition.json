@@ -1,0 +1,462 @@
+[
+    {
+        "ticker": "CACR11",
+        "nome": "CARTESIA FII"
+    },
+    {
+        "ticker": "AFHI11",
+        "nome": "FII AFHI CRI"
+    },
+    {
+        "ticker": "AJFI11",
+        "nome": "FII AJ MALLS"
+    },
+    {
+        "ticker": "ALZR11",
+        "nome": "FII ALIANZA"
+    },
+    {
+        "ticker": "RZAT11",
+        "nome": "FII ARCTIUM"
+    },
+    {
+        "ticker": "FATN11",
+        "nome": "FII ATHENA I"
+    },
+    {
+        "ticker": "ARRI11",
+        "nome": "FII ATRIO"
+    },
+    {
+        "ticker": "AIEC11",
+        "nome": "FII AUTONOMY"
+    },
+    {
+        "ticker": "AZPL11",
+        "nome": "FII AZPL"
+    },
+    {
+        "ticker": "BBIG11",
+        "nome": "FII BBIG"
+    },
+    {
+        "ticker": "BRCR11",
+        "nome": "FII BC FUND"
+    },
+    {
+        "ticker": "BCIA11",
+        "nome": "FII BCIA"
+    },
+    {
+        "ticker": "BCRI11",
+        "nome": "FII BEES CRI"
+    },
+    {
+        "ticker": "BLMG11",
+        "nome": "FII BLUE LOG"
+    },
+    {
+        "ticker": "BRCO11",
+        "nome": "FII BRESCO"
+    },
+    {
+        "ticker": "BROF11",
+        "nome": "FII BROF"
+    },
+    {
+        "ticker": "BTAL11",
+        "nome": "FII BTG AGRO"
+    },
+    {
+        "ticker": "BTCI11",
+        "nome": "FII BTG CRI"
+    },
+    {
+        "ticker": "BPML11",
+        "nome": "FII BTG SHOP"
+    },
+    {
+        "ticker": "BTHF11",
+        "nome": "FII BTHF"
+    },
+    {
+        "ticker": "BTLG11",
+        "nome": "FII BTLG"
+    },
+    {
+        "ticker": "CCME11",
+        "nome": "FII CANUMA"
+    },
+    {
+        "ticker": "CPTS11",
+        "nome": "FII CAPI SEC"
+    },
+    {
+        "ticker": "ICRI11",
+        "nome": "FII CI IPCA"
+    },
+    {
+        "ticker": "CLIN11",
+        "nome": "FII CLAVE IN"
+    },
+    {
+        "ticker": "CPSH11",
+        "nome": "FII CPSH"
+    },
+    {
+        "ticker": "CVBI11",
+        "nome": "FII CVBI VBI"
+    },
+    {
+        "ticker": "CYCR11",
+        "nome": "FII CYRELA"
+    },
+    {
+        "ticker": "DEVA11",
+        "nome": "FII DEVANT"
+    },
+    {
+        "ticker": "VRTA11",
+        "nome": "FII FATOR VE"
+    },
+    {
+        "ticker": "GTWR11",
+        "nome": "FII G TOWERS"
+    },
+    {
+        "ticker": "GZIT11",
+        "nome": "FII GAZIT"
+    },
+    {
+        "ticker": "GGRC11",
+        "nome": "FII GGRCOVEP"
+    },
+    {
+        "ticker": "GARE11",
+        "nome": "FII GUARDIAN"
+    },
+    {
+        "ticker": "HABT11",
+        "nome": "FII HABIT II"
+    },
+    {
+        "ticker": "HCTR11",
+        "nome": "FII HECTARE"
+    },
+    {
+        "ticker": "HGBS11",
+        "nome": "FII HEDGEBS"
+    },
+    {
+        "ticker": "HGCR11",
+        "nome": "FII HGCR PAX"
+    },
+    {
+        "ticker": "HGLG11",
+        "nome": "FII HGLG PAX"
+    },
+    {
+        "ticker": "HGRE11",
+        "nome": "FII HGRE PAX"
+    },
+    {
+        "ticker": "HGRU11",
+        "nome": "FII HGRU PAX"
+    },
+    {
+        "ticker": "HTMX11",
+        "nome": "FII HOTEL MX"
+    },
+    {
+        "ticker": "HSAF11",
+        "nome": "FII HSI CRI"
+    },
+    {
+        "ticker": "HSLG11",
+        "nome": "FII HSI LOG"
+    },
+    {
+        "ticker": "HSML11",
+        "nome": "FII HSI MALL"
+    },
+    {
+        "ticker": "HFOF11",
+        "nome": "FII HTOPFOF3"
+    },
+    {
+        "ticker": "IRDM11",
+        "nome": "FII IRIDIUM"
+    },
+    {
+        "ticker": "ITRI11",
+        "nome": "FII ITRI"
+    },
+    {
+        "ticker": "JSAF11",
+        "nome": "FII JS A FIN"
+    },
+    {
+        "ticker": "JSRE11",
+        "nome": "FII JS REAL"
+    },
+    {
+        "ticker": "JSCR11",
+        "nome": "FII JSCR"
+    },
+    {
+        "ticker": "KISU11",
+        "nome": "FII KILIMA"
+    },
+    {
+        "ticker": "KNRI11",
+        "nome": "FII KINEA"
+    },
+    {
+        "ticker": "KCRE11",
+        "nome": "FII KINEA CR"
+    },
+    {
+        "ticker": "KNHF11",
+        "nome": "FII KINEA HF"
+    },
+    {
+        "ticker": "KNHY11",
+        "nome": "FII KINEA HY"
+    },
+    {
+        "ticker": "KNIP11",
+        "nome": "FII KINEA IP"
+    },
+    {
+        "ticker": "KNCR11",
+        "nome": "FII KINEA RI"
+    },
+    {
+        "ticker": "KNSC11",
+        "nome": "FII KINEA SC"
+    },
+    {
+        "ticker": "KNUQ11",
+        "nome": "FII KINEA UN"
+    },
+    {
+        "ticker": "KFOF11",
+        "nome": "FII KINEAFOF"
+    },
+    {
+        "ticker": "KIVO11",
+        "nome": "FII KIVO"
+    },
+    {
+        "ticker": "KORE11",
+        "nome": "FII KORE"
+    },
+    {
+        "ticker": "LIFE11",
+        "nome": "FII LIFE"
+    },
+    {
+        "ticker": "LVBI11",
+        "nome": "FII LVBI VBI"
+    },
+    {
+        "ticker": "MANA11",
+        "nome": "FII MANATI"
+    },
+    {
+        "ticker": "MCCI11",
+        "nome": "FII MAUA"
+    },
+    {
+        "ticker": "MCRE11",
+        "nome": "FII MAUA RE"
+    },
+    {
+        "ticker": "MXRF11",
+        "nome": "FII MAXI REN"
+    },
+    {
+        "ticker": "MFII11",
+        "nome": "FII MERITO I"
+    },
+    {
+        "ticker": "OUJP11",
+        "nome": "FII OURI JPP"
+    },
+    {
+        "ticker": "PATL11",
+        "nome": "FII PATL VBI"
+    },
+    {
+        "ticker": "PMIS11",
+        "nome": "FII PMIS"
+    },
+    {
+        "ticker": "PMLL11",
+        "nome": "FII PMLL PAX"
+    },
+    {
+        "ticker": "PORD11",
+        "nome": "FII POLO CRI"
+    },
+    {
+        "ticker": "PVBI11",
+        "nome": "FII PVBI VBI"
+    },
+    {
+        "ticker": "RBRL11",
+        "nome": "FII RBR LOG"
+    },
+    {
+        "ticker": "RBRX11",
+        "nome": "FII RBR MULT"
+    },
+    {
+        "ticker": "RBRY11",
+        "nome": "FII RBR PCRI"
+    },
+    {
+        "ticker": "RBRP11",
+        "nome": "FII RBR PROP"
+    },
+    {
+        "ticker": "RBRF11",
+        "nome": "FII RBRALPHA"
+    },
+    {
+        "ticker": "RBRR11",
+        "nome": "FII RBRHGRAD"
+    },
+    {
+        "ticker": "RECR11",
+        "nome": "FII REC RECE"
+    },
+    {
+        "ticker": "RBFF11",
+        "nome": "FII RIOB FF"
+    },
+    {
+        "ticker": "RCRB11",
+        "nome": "FII RIOB RC"
+    },
+    {
+        "ticker": "RBVA11",
+        "nome": "FII RIOB VA"
+    },
+    {
+        "ticker": "RZAK11",
+        "nome": "FII RIZA AKN"
+    },
+    {
+        "ticker": "RZTR11",
+        "nome": "FII RIZA TX"
+    },
+    {
+        "ticker": "RVBI11",
+        "nome": "FII RVBI VBI"
+    },
+    {
+        "ticker": "SARE11",
+        "nome": "FII SANT REN"
+    },
+    {
+        "ticker": "TRBL11",
+        "nome": "FII SDI LOG"
+    },
+    {
+        "ticker": "SPXS11",
+        "nome": "FII SPX SYN"
+    },
+    {
+        "ticker": "SNCI11",
+        "nome": "FII SUNO CRI"
+    },
+    {
+        "ticker": "SNEL11",
+        "nome": "FII SUNO EL"
+    },
+    {
+        "ticker": "SNFF11",
+        "nome": "FII SUNOFOFI"
+    },
+    {
+        "ticker": "TEPP11",
+        "nome": "FII TEL PROP"
+    },
+    {
+        "ticker": "TGAR11",
+        "nome": "FII TG ATIVO"
+    },
+    {
+        "ticker": "TVRI11",
+        "nome": "FII TIVIO RI"
+    },
+    {
+        "ticker": "TOPP11",
+        "nome": "FII TOPP"
+    },
+    {
+        "ticker": "TRXF11",
+        "nome": "FII TRX REAL"
+    },
+    {
+        "ticker": "URPR11",
+        "nome": "FII URCA REN"
+    },
+    {
+        "ticker": "VGHF11",
+        "nome": "FII VALOR HE"
+    },
+    {
+        "ticker": "VGIP11",
+        "nome": "FII VALORAIP"
+    },
+    {
+        "ticker": "VGIR11",
+        "nome": "FII VALREIII"
+    },
+    {
+        "ticker": "VCJR11",
+        "nome": "FII VECTIS"
+    },
+    {
+        "ticker": "VGRI11",
+        "nome": "FII VGRI"
+    },
+    {
+        "ticker": "VILG11",
+        "nome": "FII VINCI LG"
+    },
+    {
+        "ticker": "VINO11",
+        "nome": "FII VINCI OF"
+    },
+    {
+        "ticker": "VISC11",
+        "nome": "FII VINCI SC"
+    },
+    {
+        "ticker": "VRTM11",
+        "nome": "FII VRTM"
+    },
+    {
+        "ticker": "WHGR11",
+        "nome": "FII WHG REAL"
+    },
+    {
+        "ticker": "XPCI11",
+        "nome": "FII XP CRED"
+    },
+    {
+        "ticker": "XPLG11",
+        "nome": "FII XP LOG"
+    },
+    {
+        "ticker": "XPML11",
+        "nome": "FII XP MALLS"
+    },
+    {
+        "ticker": "XPSF11",
+        "nome": "FII XP SELEC"
+    }
+]

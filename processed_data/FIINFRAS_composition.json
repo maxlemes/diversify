@@ -1,0 +1,38 @@
+[
+  {
+    "ticker": "BDIF11",
+    "nome": "BTG PACTUAL DIVIDENDOS FI-INFRA"
+  },
+  {
+    "ticker": "BICE11",
+    "nome": "BOCAINA INFRA FI-INFRA"
+  },
+  {
+    "ticker": "BIDB11",
+    "nome": "INTER ASSET INFRA FI-INFRA"
+  },
+  {
+    "ticker": "CDII11",
+    "nome": "SPARTA CÍCLICO D FI-INFRA"
+  },
+  {
+    "ticker": "CPTI11",
+    "nome": "CAPITÂNIA INFRA FI-INFRA"
+  },
+  {
+    "ticker": "JURO11",
+    "nome": "SPARTA RENDA FIXA FI-INFRA"
+  },
+  {
+    "ticker": "KDIF11",
+    "nome": "KINEA INFRA FI-INFRA"
+  },
+  {
+    "ticker": "VIFI11",
+    "nome": "VINCI ENERGIA FI-INFRA"
+  },
+  {
+    "ticker": "XPID11",
+    "nome": "XP INFRA FI-INFRA"
+  }
+]

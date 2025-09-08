@@ -1,0 +1,18 @@
+[
+  {
+    "ticker": "IBOV",
+    "nome": "Índice Bovespa"
+  },
+  {
+    "ticker": "DIVO11",
+    "nome": "Índice Ações de Dividendos"
+  },
+  {
+    "ticker": "SMAL11",
+    "nome": "Índice Small Caps"
+  },
+  {
+    "ticker": "XFIX11",
+    "nome": "Índice de Fundos Imobiliários"
+  }
+]

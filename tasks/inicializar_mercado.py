@@ -48,7 +48,6 @@ import datetime
 import yfinance as yf
 from db_nexus import DatabaseSessionManager
 
-from diversify.b3_index import b3_composition, refresh_indices
 from diversify.models import TipoAtivo, db_start
 
 # Importa as funções necessárias dos outros módulos

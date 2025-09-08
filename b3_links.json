@@ -1,0 +1,9 @@
+{
+  "indices_b3": {
+    "IBOV": "https://sistemaswebb3-listados.b3.com.br/indexPage/day/IBOV?language=pt-br",
+    "IFIX": "https://sistemaswebb3-listados.b3.com.br/indexPage/day/IFIX?language=pt-br",
+    "IDIV": "https://sistemaswebb3-listados.b3.com.br/indexPage/day/IDIV?language=pt-br",
+    "SMLL": "https://sistemaswebb3-listados.b3.com.br/indexPage/day/SMLL?language=pt-br",
+    "IBRA": "https://sistemaswebb3-listados.b3.com.br/indexPage/day/IBRA?language=pt-br"
+  }
+}

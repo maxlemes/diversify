@@ -1,0 +1,54 @@
+[
+  {
+    "ticker": "BTRA11",
+    "nome": "BTG PACTUAL CRÉDITO AGRÍCOLA FIAGRO"
+  },
+  {
+    "ticker": "CPTR11",
+    "nome": "CAPITAL PARTNERS FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "DCRA11",
+    "nome": "DEVANT FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "FGAA11",
+    "nome": "FG/AGRO FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "GCRA11",
+    "nome": "GALAPAGOS RECEBÍVEIS DO AGRONEGÓCIO FIAGRO"
+  },
+  {
+    "ticker": "KNCA11",
+    "nome": "KINEA CRÉDITO AGRO FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "KOPA11",
+    "nome": "KOPRIVA FIAGRO FDO INV AGRO"
+  },
+  {
+    "ticker": "OIAG11",
+    "nome": "OURINVEST INNOVATION AG FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "RURA11",
+    "nome": "ITAÚ ASSET RURAL FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "RZAG11",
+    "nome": "RIZA AGRO FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "SNAG11",
+    "nome": "SUNO AGRO FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "VGIA11",
+    "nome": "VALORA CRA FIAGRO-IMOBILIÁRIO"
+  },
+  {
+    "ticker": "XPCA11",
+    "nome": "XP CRÉDITO AGRO FIAGRO-IMOBILIÁRIO"
+  }
+]

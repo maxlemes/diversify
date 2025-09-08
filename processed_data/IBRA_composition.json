@@ -1,0 +1,658 @@
+[
+    {
+        "ticker": "TTEN3",
+        "nome": "3TENTOS"
+    },
+    {
+        "ticker": "ABCB4",
+        "nome": "ABC BRASIL"
+    },
+    {
+        "ticker": "ALOS3",
+        "nome": "ALLOS"
+    },
+    {
+        "ticker": "ALPA4",
+        "nome": "ALPARGATAS"
+    },
+    {
+        "ticker": "ALUP11",
+        "nome": "ALUPAR"
+    },
+    {
+        "ticker": "ABEV3",
+        "nome": "AMBEV S/A"
+    },
+    {
+        "ticker": "AMBP3",
+        "nome": "AMBIPAR"
+    },
+    {
+        "ticker": "ANIM3",
+        "nome": "ANIMA"
+    },
+    {
+        "ticker": "ARML3",
+        "nome": "ARMAC"
+    },
+    {
+        "ticker": "ASAI3",
+        "nome": "ASSAI"
+    },
+    {
+        "ticker": "AURE3",
+        "nome": "AUREN"
+    },
+    {
+        "ticker": "AMOB3",
+        "nome": "AUTOMOB"
+    },
+    {
+        "ticker": "AZZA3",
+        "nome": "AZZAS 2154"
+    },
+    {
+        "ticker": "B3SA3",
+        "nome": "B3"
+    },
+    {
+        "ticker": "BPAN4",
+        "nome": "BANCO PAN"
+    },
+    {
+        "ticker": "BRSR6",
+        "nome": "BANRISUL"
+    },
+    {
+        "ticker": "BBSE3",
+        "nome": "BBSEGURIDADE"
+    },
+    {
+        "ticker": "BMOB3",
+        "nome": "BEMOBI TECH"
+    },
+    {
+        "ticker": "BLAU3",
+        "nome": "BLAU"
+    },
+    {
+        "ticker": "SOJA3",
+        "nome": "BOA SAFRA"
+    },
+    {
+        "ticker": "BRBI11",
+        "nome": "BR PARTNERS"
+    },
+    {
+        "ticker": "BBDC3",
+        "nome": "BRADESCO"
+    },
+    {
+        "ticker": "BBDC4",
+        "nome": "BRADESCO"
+    },
+    {
+        "ticker": "BRAP4",
+        "nome": "BRADESPAR"
+    },
+    {
+        "ticker": "BBAS3",
+        "nome": "BRASIL"
+    },
+    {
+        "ticker": "AGRO3",
+        "nome": "BRASILAGRO"
+    },
+    {
+        "ticker": "BRKM5",
+        "nome": "BRASKEM"
+    },
+    {
+        "ticker": "BRAV3",
+        "nome": "BRAVA"
+    },
+    {
+        "ticker": "BRFS3",
+        "nome": "BRF SA"
+    },
+    {
+        "ticker": "BPAC11",
+        "nome": "BTGP BANCO"
+    },
+    {
+        "ticker": "CXSE3",
+        "nome": "CAIXA SEGURI"
+    },
+    {
+        "ticker": "CAML3",
+        "nome": "CAMIL"
+    },
+    {
+        "ticker": "BHIA3",
+        "nome": "CASAS BAHIA"
+    },
+    {
+        "ticker": "CBAV3",
+        "nome": "CBA"
+    },
+    {
+        "ticker": "CEAB3",
+        "nome": "CEA MODAS"
+    },
+    {
+        "ticker": "CMIG4",
+        "nome": "CEMIG"
+    },
+    {
+        "ticker": "COGN3",
+        "nome": "COGNA ON"
+    },
+    {
+        "ticker": "CSMG3",
+        "nome": "COPASA"
+    },
+    {
+        "ticker": "CPLE3",
+        "nome": "COPEL"
+    },
+    {
+        "ticker": "CPLE6",
+        "nome": "COPEL"
+    },
+    {
+        "ticker": "CSAN3",
+        "nome": "COSAN"
+    },
+    {
+        "ticker": "CPFE3",
+        "nome": "CPFL ENERGIA"
+    },
+    {
+        "ticker": "CMIN3",
+        "nome": "CSNMINERACAO"
+    },
+    {
+        "ticker": "CURY3",
+        "nome": "CURY S/A"
+    },
+    {
+        "ticker": "CVCB3",
+        "nome": "CVC BRASIL"
+    },
+    {
+        "ticker": "CYRE3",
+        "nome": "CYRELA REALT"
+    },
+    {
+        "ticker": "DXCO3",
+        "nome": "DEXCO"
+    },
+    {
+        "ticker": "PNVL3",
+        "nome": "DIMED"
+    },
+    {
+        "ticker": "DIRR3",
+        "nome": "DIRECIONAL"
+    },
+    {
+        "ticker": "ECOR3",
+        "nome": "ECORODOVIAS"
+    },
+    {
+        "ticker": "ELET3",
+        "nome": "ELETROBRAS"
+    },
+    {
+        "ticker": "ELET6",
+        "nome": "ELETROBRAS"
+    },
+    {
+        "ticker": "EMBR3",
+        "nome": "EMBRAER"
+    },
+    {
+        "ticker": "ENGI11",
+        "nome": "ENERGISA"
+    },
+    {
+        "ticker": "ENEV3",
+        "nome": "ENEVA"
+    },
+    {
+        "ticker": "EGIE3",
+        "nome": "ENGIE BRASIL"
+    },
+    {
+        "ticker": "EQTL3",
+        "nome": "EQUATORIAL"
+    },
+    {
+        "ticker": "EVEN3",
+        "nome": "EVEN"
+    },
+    {
+        "ticker": "EZTC3",
+        "nome": "EZTEC"
+    },
+    {
+        "ticker": "FESA4",
+        "nome": "FERBASA"
+    },
+    {
+        "ticker": "FLRY3",
+        "nome": "FLEURY"
+    },
+    {
+        "ticker": "FRAS3",
+        "nome": "FRAS-LE"
+    },
+    {
+        "ticker": "GFSA3",
+        "nome": "GAFISA"
+    },
+    {
+        "ticker": "GGBR4",
+        "nome": "GERDAU"
+    },
+    {
+        "ticker": "GOAU4",
+        "nome": "GERDAU MET"
+    },
+    {
+        "ticker": "GGPS3",
+        "nome": "GPS"
+    },
+    {
+        "ticker": "GRND3",
+        "nome": "GRENDENE"
+    },
+    {
+        "ticker": "GMAT3",
+        "nome": "GRUPO MATEUS"
+    },
+    {
+        "ticker": "SBFG3",
+        "nome": "GRUPO SBF"
+    },
+    {
+        "ticker": "GUAR3",
+        "nome": "GUARARAPES"
+    },
+    {
+        "ticker": "HAPV3",
+        "nome": "HAPVIDA"
+    },
+    {
+        "ticker": "HBSA3",
+        "nome": "HIDROVIAS"
+    },
+    {
+        "ticker": "HYPE3",
+        "nome": "HYPERA"
+    },
+    {
+        "ticker": "IGTI11",
+        "nome": "IGUATEMI S.A"
+    },
+    {
+        "ticker": "INTB3",
+        "nome": "INTELBRAS"
+    },
+    {
+        "ticker": "MYPK3",
+        "nome": "IOCHP-MAXION"
+    },
+    {
+        "ticker": "RANI3",
+        "nome": "IRANI"
+    },
+    {
+        "ticker": "IRBR3",
+        "nome": "IRBBRASIL RE"
+    },
+    {
+        "ticker": "ISAE4",
+        "nome": "ISA ENERGIA"
+    },
+    {
+        "ticker": "ITSA4",
+        "nome": "ITAUSA"
+    },
+    {
+        "ticker": "ITUB3",
+        "nome": "ITAUUNIBANCO"
+    },
+    {
+        "ticker": "ITUB4",
+        "nome": "ITAUUNIBANCO"
+    },
+    {
+        "ticker": "JALL3",
+        "nome": "JALLESMACHAD"
+    },
+    {
+        "ticker": "JHSF3",
+        "nome": "JHSF PART"
+    },
+    {
+        "ticker": "JSLG3",
+        "nome": "JSL"
+    },
+    {
+        "ticker": "KEPL3",
+        "nome": "KEPLER WEBER"
+    },
+    {
+        "ticker": "KLBN11",
+        "nome": "KLABIN S/A"
+    },
+    {
+        "ticker": "LAVV3",
+        "nome": "LAVVI"
+    },
+    {
+        "ticker": "RENT3",
+        "nome": "LOCALIZA"
+    },
+    {
+        "ticker": "LOGG3",
+        "nome": "LOG COM PROP"
+    },
+    {
+        "ticker": "LREN3",
+        "nome": "LOJAS RENNER"
+    },
+    {
+        "ticker": "LWSA3",
+        "nome": "LWSA"
+    },
+    {
+        "ticker": "MDIA3",
+        "nome": "M.DIASBRANCO"
+    },
+    {
+        "ticker": "MGLU3",
+        "nome": "MAGAZ LUIZA"
+    },
+    {
+        "ticker": "POMO4",
+        "nome": "MARCOPOLO"
+    },
+    {
+        "ticker": "MRFG3",
+        "nome": "MARFRIG"
+    },
+    {
+        "ticker": "CASH3",
+        "nome": "MELIUZ"
+    },
+    {
+        "ticker": "LEVE3",
+        "nome": "METAL LEVE"
+    },
+    {
+        "ticker": "MILS3",
+        "nome": "MILLS"
+    },
+    {
+        "ticker": "BEEF3",
+        "nome": "MINERVA"
+    },
+    {
+        "ticker": "MOTV3",
+        "nome": "MOTIVA SA"
+    },
+    {
+        "ticker": "MDNE3",
+        "nome": "MOURA DUBEUX"
+    },
+    {
+        "ticker": "MOVI3",
+        "nome": "MOVIDA"
+    },
+    {
+        "ticker": "MRVE3",
+        "nome": "MRV"
+    },
+    {
+        "ticker": "MULT3",
+        "nome": "MULTIPLAN"
+    },
+    {
+        "ticker": "NATU3",
+        "nome": "NATURA"
+    },
+    {
+        "ticker": "NEOE3",
+        "nome": "NEOENERGIA"
+    },
+    {
+        "ticker": "ODPV3",
+        "nome": "ODONTOPREV"
+    },
+    {
+        "ticker": "ONCO3",
+        "nome": "ONCOCLINICAS"
+    },
+    {
+        "ticker": "ORVR3",
+        "nome": "ORIZON"
+    },
+    {
+        "ticker": "PCAR3",
+        "nome": "P.ACUCAR-CBD"
+    },
+    {
+        "ticker": "PGMN3",
+        "nome": "PAGUE MENOS"
+    },
+    {
+        "ticker": "PETR3",
+        "nome": "PETROBRAS"
+    },
+    {
+        "ticker": "PETR4",
+        "nome": "PETROBRAS"
+    },
+    {
+        "ticker": "RECV3",
+        "nome": "PETRORECSA"
+    },
+    {
+        "ticker": "PRIO3",
+        "nome": "PETRORIO"
+    },
+    {
+        "ticker": "PETZ3",
+        "nome": "PETZ"
+    },
+    {
+        "ticker": "PLPL3",
+        "nome": "PLANOEPLANO"
+    },
+    {
+        "ticker": "PSSA3",
+        "nome": "PORTO SEGURO"
+    },
+    {
+        "ticker": "POSI3",
+        "nome": "POSITIVO TEC"
+    },
+    {
+        "ticker": "PRNR3",
+        "nome": "PRINER"
+    },
+    {
+        "ticker": "QUAL3",
+        "nome": "QUALICORP"
+    },
+    {
+        "ticker": "LJQQ3",
+        "nome": "QUERO-QUERO"
+    },
+    {
+        "ticker": "RADL3",
+        "nome": "RAIADROGASIL"
+    },
+    {
+        "ticker": "RAIZ4",
+        "nome": "RAIZEN"
+    },
+    {
+        "ticker": "RAPT4",
+        "nome": "RANDON PART"
+    },
+    {
+        "ticker": "RCSL3",
+        "nome": "RECRUSUL"
+    },
+    {
+        "ticker": "RCSL4",
+        "nome": "RECRUSUL"
+    },
+    {
+        "ticker": "RDOR3",
+        "nome": "REDE D OR"
+    },
+    {
+        "ticker": "RAIL3",
+        "nome": "RUMO S.A."
+    },
+    {
+        "ticker": "SBSP3",
+        "nome": "SABESP"
+    },
+    {
+        "ticker": "SAPR11",
+        "nome": "SANEPAR"
+    },
+    {
+        "ticker": "SANB11",
+        "nome": "SANTANDER BR"
+    },
+    {
+        "ticker": "STBP3",
+        "nome": "SANTOS BRP"
+    },
+    {
+        "ticker": "SMTO3",
+        "nome": "SAO MARTINHO"
+    },
+    {
+        "ticker": "SEER3",
+        "nome": "SER EDUCA"
+    },
+    {
+        "ticker": "SRNA3",
+        "nome": "SERENA"
+    },
+    {
+        "ticker": "CSNA3",
+        "nome": "SID NACIONAL"
+    },
+    {
+        "ticker": "SIMH3",
+        "nome": "SIMPAR"
+    },
+    {
+        "ticker": "SLCE3",
+        "nome": "SLC AGRICOLA"
+    },
+    {
+        "ticker": "SMFT3",
+        "nome": "SMART FIT"
+    },
+    {
+        "ticker": "SUZB3",
+        "nome": "SUZANO S.A."
+    },
+    {
+        "ticker": "SYNE3",
+        "nome": "SYN PROP TEC"
+    },
+    {
+        "ticker": "TAEE11",
+        "nome": "TAESA"
+    },
+    {
+        "ticker": "TGMA3",
+        "nome": "TEGMA"
+    },
+    {
+        "ticker": "VIVT3",
+        "nome": "TELEF BRASIL"
+    },
+    {
+        "ticker": "TEND3",
+        "nome": "TENDA"
+    },
+    {
+        "ticker": "TIMS3",
+        "nome": "TIM"
+    },
+    {
+        "ticker": "TOTS3",
+        "nome": "TOTVS"
+    },
+    {
+        "ticker": "TFCO4",
+        "nome": "TRACK FIELD"
+    },
+    {
+        "ticker": "TUPY3",
+        "nome": "TUPY"
+    },
+    {
+        "ticker": "UGPA3",
+        "nome": "ULTRAPAR"
+    },
+    {
+        "ticker": "UNIP6",
+        "nome": "UNIPAR"
+    },
+    {
+        "ticker": "USIM5",
+        "nome": "USIMINAS"
+    },
+    {
+        "ticker": "VALE3",
+        "nome": "VALE"
+    },
+    {
+        "ticker": "VLID3",
+        "nome": "VALID"
+    },
+    {
+        "ticker": "VAMO3",
+        "nome": "VAMOS"
+    },
+    {
+        "ticker": "VBBR3",
+        "nome": "VIBRA"
+    },
+    {
+        "ticker": "VIVA3",
+        "nome": "VIVARA S.A."
+    },
+    {
+        "ticker": "VVEO3",
+        "nome": "VIVEO"
+    },
+    {
+        "ticker": "VULC3",
+        "nome": "VULCABRAS"
+    },
+    {
+        "ticker": "WEGE3",
+        "nome": "WEG"
+    },
+    {
+        "ticker": "PORT3",
+        "nome": "WILSON SONS"
+    },
+    {
+        "ticker": "YDUQ3",
+        "nome": "YDUQS PART"
+    }
+]

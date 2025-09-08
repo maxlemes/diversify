@@ -42,19 +42,17 @@
 #
 # ==============================================================================
 
+import datetime
+from typing import List, Tuple
 
-from db_nexus import BaseRepository  # Importamos nossa classe base
+from db_nexus import BaseRepository
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from .models import (  # Importamos nossos modelos
-    Ativo,
-    Carteira,
-    DadoHistorico,
-    TipoOperacao,
-    Transacao,
-)
+from .models import Ativo, PrecoHistorico, TipoAtivo
 
 
+# --- Classe para interagir com a tabela AtivoRepository ---
 class AtivoRepository(BaseRepository[Ativo]):
     """
     Repositório para operações com o modelo Ativo.
@@ -68,91 +66,54 @@ class AtivoRepository(BaseRepository[Ativo]):
 
     # --- Métodos Específicos para Ativos ---
 
-    def find_by_ticker(self, session: Session, ticker: str) -> Ativo | None:
+    def find_or_create(
+        self, session: Session, ticker: str, nome: str, tipo: TipoAtivo
+    ) -> Ativo:
         """
-        Busca um ativo específico pelo seu ticker.
-        Retorna o objeto Ativo ou None se não encontrar.
+        Busca um ativo pelo ticker. Se não existir, cria um novo.
+        Se existir, verifica se o nome ou tipo precisam ser atualizados.
         """
-        return session.query(self.model).filter_by(ticker=ticker.upper()).first()
+        instance = session.query(self.model).filter_by(ticker=ticker).first()
+        if not instance:
+            print(f"Ativo não encontrado, criando: {ticker}")
+            instance = Ativo(ticker=ticker, nome=nome, tipo=tipo)
+            session.add(instance)
+        else:
+            # Opcional: Atualiza os dados se eles mudaram
+            if instance.nome != nome or instance.tipo != tipo:
+                instance.nome = nome
+                instance.tipo = tipo
+                print(f"Ativo encontrado, atualizando dados: {ticker}")
+        return instance
 
-    def find_or_create(self, session: Session, ticker: str, defaults: dict) -> Ativo:
+    def list_all_ids_and_tickers(self, session: Session) -> List[Tuple[int, str]]:
         """
-        Busca um ativo pelo ticker. Se não existir, cria um novo com os dados
-        fornecidos em 'defaults'.
-        Útil para não duplicar ativos ao importar dados.
+        Busca e retorna uma lista de tuplas contendo o ID e o Ticker de todos os ativos.
         """
-        ativo = self.find_by_ticker(session, ticker)
-        if ativo:
-            return ativo
-
-        # Se não encontrou, cria um novo
-        # O dicionário 'defaults' deve conter 'nome', 'tipo', etc.
-        novo_ativo = Ativo(ticker=ticker.upper(), **defaults)
-        self.add(session, novo_ativo)
-        # O SQLAlchemy atualiza o objeto 'novo_ativo' com o ID após o add
-        return novo_ativo
-
-
-class TransacaoRepository(BaseRepository[Transacao]):
-    """
-    Repositório para operações com o modelo Transacao.
-    """
-
-    def __init__(self):
-        super().__init__(Transacao)
-
-    # --- Métodos Específicos para Transações ---
-
-    def find_by_ativo_id(self, session: Session, ativo_id: int) -> list[Transacao]:
-        """
-        Busca todas as transações de um determinado ativo.
-        """
-        return (
-            session.query(self.model)
-            .filter_by(ativo_id=ativo_id)
-            .order_by(self.model.data.asc())
+        print("Buscando ID e Ticker de todos os ativos...")
+        # A query seleciona especificamente as colunas 'id' e 'ticker'
+        resultados = (
+            session.query(self.model.id, self.model.ticker)
+            .order_by(self.model.ticker)
             .all()
         )
-
-    def existe_transacao_identica(
-        self,
-        session: Session,
-        ativo_id: int,
-        data: datetime.date,
-        tipo_op: TipoOperacao,
-        qtd: float,
-        preco: float,
-    ) -> bool:
-        """
-        Verifica se uma transação com exatamente os mesmos parâmetros já existe.
-        """
-        # SQLAlchemy nos permite construir queries complexas de forma legível
-        return session.query(
-            session.query(self.model)
-            .filter_by(
-                ativo_id=ativo_id,
-                data=data,
-                tipo_operacao=tipo_op,
-                quantidade=qtd,
-                preco_unitario=preco,
-            )
-            .exists()
-        ).scalar()
+        # O resultado já vem no formato [ (1, 'ABCB4'), (2, 'BBDC4'), ... ]
+        return resultados
 
 
-class DadoHistoricoRepository(BaseRepository[DadoHistorico]):
+# --- Classe para interagir com a tabela PrecoHistorico ---
+class PrecoHistoricoRepository(BaseRepository[PrecoHistorico]):
     """
     Repositório para operações com o modelo DadoHistorico.
     """
 
     def __init__(self):
-        super().__init__(DadoHistorico)
+        super().__init__(PrecoHistorico)
 
-    # --- Métodos Específicos para Dados Históricos ---
-
+    # --- Métodos Específicos para Precos Históricos ---
     def find_by_ticker_and_date_range(
         self, session: Session, ticker: str, start_date: str, end_date: str
-    ) -> list[DadoHistorico]:
+    ) -> list[PrecoHistorico]:
         """
         Busca os dados históricos para um ticker dentro de um intervalo de datas.
         """
@@ -164,7 +125,7 @@ class DadoHistoricoRepository(BaseRepository[DadoHistorico]):
             .all()
         )
 
-    def get_latest_price(self, session: Session, ticker: str) -> DadoHistorico | None:
+    def get_latest_price(self, session: Session, ticker: str) -> PrecoHistorico | None:
         """
         Busca o registro de dado histórico mais recente para um ticker.
         """
@@ -175,17 +136,24 @@ class DadoHistoricoRepository(BaseRepository[DadoHistorico]):
             .first()
         )
 
-
-class CarteiraRepository(BaseRepository[Carteira]):
-    """
-    Repositório para operações com o modelo Carteira.
-    """
-
-    def __init__(self):
-        super().__init__(Carteira)
-
-    def find_by_name(self, session: Session, nome: str) -> Carteira | None:
+    def get_latest_date(self, session: Session, ativo_id: int) -> datetime.date | None:
         """
-        Busca uma carteira específica pelo seu nome.
+        Encontra a data mais recente para a qual já temos um preço para um ativo.
+        Esta é a chave para fazer atualizações eficientes.
         """
-        return session.query(self.model).filter_by(nome=nome).first()
+        # Usa a função `func.max` do SQLAlchemy para executar um `SELECT MAX(data_pregao)`
+        latest_date = (
+            session.query(func.max(self.model.data_pregao))
+            .filter(
+                self.model.ativo_id == ativo_id
+            )  # Filtra pelo ID do ativo específico
+            .scalar()  # Retorna o resultado único (a data ou None)
+        )
+        return latest_date
+
+    def bulk_insert(self, session: Session, precos: list[dict]):
+        """Insere uma lista de preços de forma otimizada."""
+        if not precos:
+            return
+        session.bulk_insert_mappings(self.model, precos)
+        print(f"{len(precos)} novos registros de preços inseridos.")
