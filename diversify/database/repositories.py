@@ -42,14 +42,15 @@
 #
 # ==============================================================================
 
-import datetime
+import datetime as dt
+from datetime import datetime, timedelta
 from typing import List, Tuple
 
 from db_nexus import BaseRepository
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from .models import Ativo, PrecoHistorico, TipoAtivo
+from .models import Ativo, Indicador, PrecoHistorico, TipoAtivo
 
 
 # --- Classe para interagir com a tabela AtivoRepository ---
@@ -125,18 +126,20 @@ class PrecoHistoricoRepository(BaseRepository[PrecoHistorico]):
             .all()
         )
 
-    def get_latest_price(self, session: Session, ticker: str) -> PrecoHistorico | None:
+    def get_latest_price(
+        self, session: Session, ativo_id: int
+    ) -> PrecoHistorico | None:
         """
-        Busca o registro de dado histórico mais recente para um ticker.
+        Busca o preço histórico mais recente de um ativo.
         """
         return (
             session.query(self.model)
-            .filter(self.model.ticker == ticker.upper())
-            .order_by(self.model.data.desc())
+            .filter(self.model.ativo_id == ativo_id)
+            .order_by(self.model.data_pregao.desc())
             .first()
         )
 
-    def get_latest_date(self, session: Session, ativo_id: int) -> datetime.date | None:
+    def get_latest_date(self, session: Session, ativo_id: int) -> dt.date | None:
         """
         Encontra a data mais recente para a qual já temos um preço para um ativo.
         Esta é a chave para fazer atualizações eficientes.
@@ -151,9 +154,53 @@ class PrecoHistoricoRepository(BaseRepository[PrecoHistorico]):
         )
         return latest_date
 
+    def get_prices_since(self, session: Session, ativo_id: int, anos: int = 2):
+        """
+        Retorna todos os preços do ativo nos últimos X anos.
+        """
+        data_limite = datetime.now().date() - timedelta(days=anos * 365)
+
+        return (
+            session.query(self.model)
+            .filter(self.model.ativo_id == ativo_id)
+            .filter(self.model.data_pregao >= data_limite)
+            .order_by(self.model.data_pregao.asc())
+            .all()
+        )
+
     def bulk_insert(self, session: Session, precos: list[dict]):
         """Insere uma lista de preços de forma otimizada."""
         if not precos:
             return
         session.bulk_insert_mappings(self.model, precos)
         print(f"{len(precos)} novos registros de preços inseridos.")
+
+
+class IndicatorRepository:
+    def inserir_ou_atualizar(
+        self,
+        session: Session,
+        ativo_id: int,
+        data_ref: datetime.date,
+        volatilidade_2a: float,
+    ):
+        """
+        Insere ou atualiza o indicador de volatilidade sem dar commit.
+        O commit é feito pelo service.
+        """
+        indicador = (
+            session.query(Indicador)
+            .filter_by(ativo_id=ativo_id, data_referencia=data_ref)
+            .first()
+        )
+
+        if indicador:
+            indicador.volatilidade_2a = volatilidade_2a
+        else:
+            indicador = Indicador(
+                ativo_id=ativo_id,
+                data_referencia=data_ref,
+                volatilidade_2a=volatilidade_2a,
+            )
+
+            session.add(indicador)

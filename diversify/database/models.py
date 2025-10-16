@@ -14,6 +14,7 @@ from sqlalchemy import (
     Integer,
     PrimaryKeyConstraint,
     String,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -36,11 +37,6 @@ class TipoAtivo(enum.Enum):
     INDICE = "Índice"
 
 
-# ==============================================================================
-# MODELOS DAS TABELAS (TABLE MODELS)
-# ==============================================================================
-
-
 # --- TABELA COM A INFO DOS ATIVOS ---
 class Ativo(Base):
     """
@@ -51,43 +47,76 @@ class Ativo(Base):
     __tablename__ = "ativos"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    # Ticker é o código único do ativo. Ex: "ITSA4", "MXRF11".
-    # `unique=True` garante que não teremos dois ativos com o mesmo ticker.
-    # `index=True` torna as buscas por ticker muito mais rápidas.
     ticker: Mapped[str] = mapped_column(String(20), unique=True, index=True)
     nome: Mapped[str] = mapped_column(String(100))
-    # Usamos o Enum que criamos para garantir que o tipo seja sempre um dos valores válidos.
     tipo: Mapped[TipoAtivo] = mapped_column(Enum(TipoAtivo))
+
+    # 🔁 Relacionamentos recíprocos
+    precos_historicos: Mapped[list["PrecoHistorico"]] = relationship(
+        back_populates="ativo", cascade="all, delete-orphan"
+    )
+
+    indicadores: Mapped[list["Indicador"]] = relationship(
+        back_populates="ativo", cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:
         return f"Ativo(ticker='{self.ticker}', nome='{self.nome}', tipo='{self.tipo.value}')"
 
 
-# --- TABELA COM PREÇOS HITÓRICOS ---
+# --- TABELA COM PREÇOS HISTÓRICOS ---
 class PrecoHistorico(Base):
-    """
-    Armazena os dados de cotação diária para ativos e índices (IBOV, XFIX11).
-    Essencial para calcular volatilidade e performance.
-    """
-
-    # Define o nome da tabela no banco de dados.
     __tablename__ = "precos_historicos"
 
-    # --- Definição das Colunas ---
     ativo_id: Mapped[int] = mapped_column(ForeignKey("ativos.id"))
-
     data_pregao: Mapped[datetime.date] = mapped_column(Date, index=True)
     preco_fechamento: Mapped[float] = mapped_column(Float)
+    retorno: Mapped[float | None] = mapped_column(Float, nullable=True)
 
-    # Adicionamos um relacionamento para facilitar a navegação no código.
-    # Ex: `preco.ativo.ticker`
-    ativo: Mapped["Ativo"] = relationship()
+    # 🔁 Relacionamento de volta para Ativo
+    ativo: Mapped["Ativo"] = relationship(back_populates="precos_historicos")
 
-    # --- Definição das Regras da Tabela --
-    # é o lugar correto para chaves primárias compostas.
     __table_args__ = (
         PrimaryKeyConstraint("data_pregao", "ativo_id", name="pk_preco_historico"),
     )
 
     def __repr__(self) -> str:
-        return f"PrecoHistorico(ativo_id='{self.ativo_id}', data='{self.data_pregao}', preco='{self.preco_fechamento}')"
+        return f"PrecoHistorico(ativo_id={self.ativo_id}, data={self.data_pregao}, preco={self.preco_fechamento})"
+
+
+# --- TABELA DE INDICADORES FUNDAMENTALISTAS E DE RISCO ---
+class Indicador(Base):
+    __tablename__ = "indicadores"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    ativo_id: Mapped[int] = mapped_column(
+        ForeignKey("ativos.id"), index=True, nullable=False
+    )
+    data_referencia: Mapped[datetime.date] = mapped_column(
+        Date, index=True, nullable=False
+    )
+
+    # --- Indicadores fundamentalistas ---
+    p_vp: Mapped[float | None] = mapped_column(Float)
+    p_l: Mapped[float | None] = mapped_column(Float)
+    dy: Mapped[float | None] = mapped_column(Float)
+    ev_ebitda: Mapped[float | None] = mapped_column(Float)
+    margem_liquida: Mapped[float | None] = mapped_column(Float)
+    roe: Mapped[float | None] = mapped_column(Float)
+    roic: Mapped[float | None] = mapped_column(Float)
+    divida_liquida_ebitda: Mapped[float | None] = mapped_column(Float)
+
+    # --- Indicador de risco ---
+    volatilidade_2a: Mapped[float | None] = mapped_column(
+        Float, doc="Volatilidade anualizada (últimos 2 anos)"
+    )
+
+    # 🔁 Relacionamento de volta para Ativo
+    ativo: Mapped["Ativo"] = relationship(back_populates="indicadores")
+
+    __table_args__ = (
+        UniqueConstraint("ativo_id", "data_referencia", name="u_ativo_data_indicador"),
+    )
+
+    def __repr__(self) -> str:
+        return f"Indicador(ativo_id={self.ativo_id}, data={self.data_referencia}, vol_2a={self.volatilidade_2a})"

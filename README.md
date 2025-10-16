@@ -18,27 +18,25 @@
 O projeto segue uma arquitetura em camadas para garantir a separação de responsabilidades, facilitando a manutenção e a escalabilidade.
 
 diversify/
-├── data/                     # Armazena os dados (banco de dados, CSVs baixados)
-│   └── portfolio.db
+├── data/                     # Armazena CSVs baixados e outros dados temporários
 ├── drivers/                  # Contém os webdrivers (ex: geckodriver)
-│   └── geckodriver
 ├── diversify/                # O pacote principal da aplicação (código fonte)
-│   ├── init.py
-│   ├── models.py             # Definição das tabelas do banco (SQLAlchemy ORM)
-│   ├── repositories.py       # Padrão Repository para acesso ao banco de dados
-│   ├── services.py           # Camada de serviço com a lógica de negócio
-│   └── b3_index.py           # Lógica para download e parsing dos dados da B3
+│   ├── __init__.py
+│   ├── b3_services.py        # Lógica de negócio para interagir com a B3 (Selenium)
+│   ├── quotes_services.py    # Lógica de negócio para cotações (yfinance)
+│   └── database/
+│       ├── __init__.py
+│       ├── models.py         # Definição das tabelas do banco (SQLAlchemy)
+│       └── repositories.py   # Padrão Repository para acesso ao banco de dados
 ├── tasks/                    # Scripts executáveis para tarefas específicas
-│   ├── init.py
-│   └── update_indices.py     # Tarefa para baixar os arquivos de índices da B3
+│   ├── b3_insert_db.py       # insere os dados dos índices no banco
+│   └── quotes_update.py      # baixa as cotacoes na B3
 ├── .venv/                    # Ambiente virtual Python
-├── inicializar_mercado.py    # Script de setup inicial para popular o banco de dados
+├── diversify.db              # Banco de dados principal
 ├── .gitignore
-├── .pre-commit-config.yaml   # Configuração das ferramentas de qualidade de código
-├── pyproject.toml            # Configurações de ferramentas (black, isort)
+├── .pre-commit-config.yaml
 ├── README.md                 # Este arquivo
-└── requirements.txt          # Lista de dependências Python
-
+└── requirements.txt
 
 ## 🛠️ Tecnologias Utilizadas
 
