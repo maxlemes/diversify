@@ -88,7 +88,6 @@ class PrecoHistorico(Base):
 class Indicador(Base):
     __tablename__ = "indicadores"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     ativo_id: Mapped[int] = mapped_column(
         ForeignKey("ativos.id"), index=True, nullable=False
     )
@@ -107,15 +106,19 @@ class Indicador(Base):
     divida_liquida_ebitda: Mapped[float | None] = mapped_column(Float)
 
     # --- Indicador de risco ---
+    # O banco já tem a coluna `volatilidade`. Aqui mapeamos o atributo
+    # `volatilidade_2a` para essa coluna para manter nomes claros no código
+    # sem alterar o schema do SQLite.
     volatilidade_2a: Mapped[float | None] = mapped_column(
-        Float, doc="Volatilidade anualizada (últimos 2 anos)"
+        "volatilidade", Float, doc="Volatilidade(últimos 2 anos)"
     )
 
     # 🔁 Relacionamento de volta para Ativo
     ativo: Mapped["Ativo"] = relationship(back_populates="indicadores")
 
+    # Tornamos (ativo_id, data_referencia) a chave primária composta
     __table_args__ = (
-        UniqueConstraint("ativo_id", "data_referencia", name="u_ativo_data_indicador"),
+        PrimaryKeyConstraint("ativo_id", "data_referencia", name="pk_indicador"),
     )
 
     def __repr__(self) -> str:

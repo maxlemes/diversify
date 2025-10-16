@@ -167,6 +167,18 @@ class PrecoHistoricoRepository(BaseRepository[PrecoHistorico]):
             .order_by(self.model.data_pregao.asc())
             .all()
         )
+    
+    def get_all_prices_since(self, session: Session, start_date):
+        """
+        Retorna todos os preços do ativo nos últimos X anos.
+        """
+
+        return (
+            session.query(self.model)
+            .filter(self.model.data_pregao >= start_date)
+            .order_by(self.model.data_pregao.asc())
+            .all()
+        )
 
     def bulk_insert(self, session: Session, precos: list[dict]):
         """Insere uma lista de preços de forma otimizada."""

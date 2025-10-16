@@ -18,10 +18,6 @@ def main():
     print("==========================================================")
 
     db_manager = DatabaseSessionManager("sqlite:///diversify.db")
-    quote_service = QuoteService()
-
-    # Garante que as tabelas do banco de dados existam
-    db_manager.create_all_tables()
 
     # Instancia a classe que contém os cálculos
     indicator_tasks = IndicatorService(db_manager)

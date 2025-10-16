@@ -28,46 +28,61 @@ class IndicatorService:
     # 📈 CÁLCULO DA VOLATILIDADE DE 2 ANOS
     # ==========================================================
     def calcular_volatilidade_2a(self):
-        """
-        Calcula a volatilidade anualizada (2 anos) para cada ativo,
-        usando apenas os preços armazenados no banco.
-        """
-        print("\n--- Calculando volatilidade de 2 anos ---")
-
+        print("\n--- Calculando volatilidade de 2 anos (Otimizado) ---")
         hoje = dt.date.today()
         dois_anos_atras = hoje - dt.timedelta(days=2 * 365)
 
         with self.db_manager.get_session() as session:
-            ativos = self.ativo_repo.list_all(session)
-            print(f"Foram encontrados {len(ativos)} ativos para cálculo.")
+            # 1. Busca todos os dados de uma vez
+            todos_precos = self.preco_repo.get_all_prices_since(
+                session, start_date=dois_anos_atras
+            )
 
-            for ativo in ativos:
-                precos = self.preco_repo.get_prices_since(ativo.id, dois_anos_atras)
+            if not todos_precos:
+                print("Nenhum preço encontrado nos últimos 2 anos.")
+                return
 
-                if not precos:
-                    print(f"[{ativo.ticker}] Sem preços nos últimos 2 anos. Pulando.")
+            # 2. Constrói um DataFrame a partir dos objetos ORM
+            rows = [
+                {
+                    "ativo_id": p.ativo_id,
+                    "data_pregao": p.data_pregao,
+                    "preco_fechamento": p.preco_fechamento,
+                    "retorno": getattr(p, "retorno", None),
+                }
+                for p in todos_precos
+            ]
+            df_total = pd.DataFrame(rows)
+            if df_total.empty:
+                print("Nenhum preço válido após conversão para DataFrame.")
+                return
+
+            indicadores_para_salvar = []
+
+            # 3. Agrupa por ativo e calcula
+            for ativo_id, df_ativo in df_total.groupby("ativo_id"):
+                df_ativo = df_ativo.sort_values("data_pregao")
+
+                # Se o campo 'retorno' não estiver preenchido, calcula a partir do fechamento
+                if "retorno" not in df_ativo.columns or df_ativo["retorno"].isna().all():
+                    df_ativo["retorno"] = df_ativo["preco_fechamento"].pct_change()
+
+                df_ativo = df_ativo.dropna(subset=["retorno"])
+
+                if len(df_ativo) < 30:
+                    print(f"[{ativo_id}] Poucos dados ({len(df_ativo)} dias). Pulando.")
                     continue
 
-                # Cria DataFrame com os preços do ativo
-                df = pd.DataFrame(precos, columns=["data_pregao", "preco_fechamento"])
-                df.sort_values("data_pregao", inplace=True)
-                df["retorno"] = df["preco_fechamento"].pct_change()
-                df.dropna(inplace=True)
+                # Volatilidade anualizada (252 pregões/ano). Usa ddof=1 (amostral).
+                vol_2a = float(df_ativo["retorno"].std(ddof=1) * np.sqrt(252))
 
-                if len(df) < 30:
-                    print(f"[{ativo.ticker}] Poucos dados ({len(df)} dias). Pulando.")
-                    continue
-
-                # Volatilidade anualizada (252 pregões/ano)
-                vol_2a = np.std(df["retorno"]) * np.sqrt(252)
-
-                indicador = Indicador(
-                    ativo_id=ativo.id,
-                    data_referencia=hoje,
-                    volatilidade_2a=float(vol_2a),
+                # Persiste usando o repositório (método existente inserir_ou_atualizar)
+                self.indicador_repo.inserir_ou_atualizar(
+                    session=session,
+                    ativo_id=int(ativo_id),
+                    data_ref=hoje,
+                    volatilidade_2a=vol_2a,
                 )
-
-                self.indicador_repo.upsert(session, indicador)
-                print(f"[{ativo.ticker}] Volatilidade 2a: {vol_2a:.4f}")
+                print(f"[{ativo_id}] Volatilidade 2a: {vol_2a:.6f}")
 
         print("\n✅ Cálculo de volatilidade finalizado e salvo no banco.")
